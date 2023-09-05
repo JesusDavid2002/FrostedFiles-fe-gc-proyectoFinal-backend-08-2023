@@ -49,20 +49,20 @@ public class Files {
     private boolean visibilidad;
     
     @ManyToOne
-    @JoinColumn(name="categoria")
-    private Categories categories;
+    @JoinColumn(name="categoria_id")
+    private Categories categoria;
     
     @ManyToOne
-    @JoinColumn(name="subcategoria")
-    private Subcategories subcategories;
+    @JoinColumn(name="subcategoria_id")
+    private Subcategories subcategoria;
     
-    @OneToMany(mappedBy="file")
+    @OneToMany(mappedBy="files")
     private List<Multimedia> multimedia;
 
-    @OneToMany(mappedBy="file")
+    @OneToMany(mappedBy="files")
     private List<Comentarios> comentarios;
     
-    @OneToMany(mappedBy="file")
+    @OneToMany(mappedBy="files")
     private List<Acciones> acciones;
 
     /** Default constructor. */
@@ -77,8 +77,8 @@ public class Files {
 		this.tamano = tamano;
 		this.fechaSubida = fechaSubida;
 		this.visibilidad = visibilidad;
-		this.categories = categories;
-		this.subcategories = subcategories;
+		this.categoria = categories;
+		this.subcategoria = subcategories;
 		this.multimedia = multimedia;
 		this.comentarios = comentarios;
 		this.acciones = acciones;
@@ -133,19 +133,19 @@ public class Files {
     }
 
     public Categories getCategories() {
-		return categories;
+		return categoria;
 	}
 
 	public void setCategories(Categories categories) {
-		this.categories = categories;
+		this.categoria = categories;
 	}
 
 	public Subcategories getSubcategories() {
-		return subcategories;
+		return subcategoria;
 	}
 
 	public void setSubcategories(Subcategories subcategories) {
-		this.subcategories = subcategories;
+		this.subcategoria = subcategories;
 	}
 	
 	@JsonIgnore
