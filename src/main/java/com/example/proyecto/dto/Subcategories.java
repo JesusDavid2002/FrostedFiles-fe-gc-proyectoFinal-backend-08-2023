@@ -36,7 +36,7 @@ public class Subcategories{
     
     @ManyToOne
     @JoinColumn(name="categoria")
-    private Categories categories;
+    private Categories categoria;
     
     @OneToMany(mappedBy="subcategoria")
     private List<Files> files;
@@ -47,7 +47,7 @@ public class Subcategories{
     public Subcategories(int subcategoryId, String nombre, Categories categories, List<Files> files) {
 		this.subcategoryId = subcategoryId;
 		this.nombre = nombre;
-		this.categories = categories;
+		this.categoria = categories;
 		this.files = files;
 	}
 
@@ -68,11 +68,11 @@ public class Subcategories{
     }
 
     public Categories getCategories() {
-		return categories;
+		return categoria;
 	}
 
 	public void setCategories(Categories categories) {
-		this.categories = categories;
+		this.categoria = categories;
 	}
 	
 	@JsonIgnore

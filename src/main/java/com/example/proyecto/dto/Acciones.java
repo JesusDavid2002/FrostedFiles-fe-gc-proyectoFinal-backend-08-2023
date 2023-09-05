@@ -39,7 +39,7 @@ public class Acciones {
     @Column(nullable=false)
     private LocalDateTime fecha;
 
-    @OneToMany(mappedBy="tipo_acciones")
+    @OneToMany(mappedBy="acciones")
     private List<DatosEstadisticos> datosEstadisiticos;
 
     @ManyToOne

@@ -35,6 +35,9 @@ public class Users {
     @Column(nullable=false, length=255)
     private String nombre;
     
+    @Column(name="password", nullable=false, length=25)
+    private String contraseña;
+    
     @Column(nullable=false, length=255)
     private String email;
     
@@ -51,17 +54,18 @@ public class Users {
     @JoinColumn(name="rol")
     private Roles roles;
 
-    @OneToMany(mappedBy="usuario")
+    @OneToMany(mappedBy="users")
     private List<Acciones> acciones;
     
     /** Default constructor. */
     public Users() {}
 
     
-    public Users(int id, String nombre, String email, LocalDateTime fechaCreacion, boolean esModerador, boolean esAdmin,
+    public Users(int id, String nombre, String password, String email, LocalDateTime fechaCreacion, boolean esModerador, boolean esAdmin,
 			Roles roles, List<Acciones> acciones) {
 		this.id = id;
 		this.nombre = nombre;
+		this.contraseña = password;
 		this.email = email;
 		this.fechaCreacion = fechaCreacion;
 		this.esModerador = esModerador;
@@ -86,7 +90,15 @@ public class Users {
         nombre = aNombre;
     }
 
-    public String getEmail() {
+    public String getContraseña() {
+		return contraseña;
+	}
+
+	public void setContraseña(String contraseña) {
+		this.contraseña = contraseña;
+	}
+
+	public String getEmail() {
         return email;
     }
 

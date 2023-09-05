@@ -9,8 +9,8 @@ public interface IUserService {
 	// Lista todos los usuarios
 	public List<Users> listarUsuarios();
 	
-	// Muestra la pieza con esa id
-	public Users usuarioID(int codigo);
+	// Muestra el usuario con ese correo
+	public Users usuarioEmail(String codigo);
 	
 	// Guarda el usuario
 	public Users guardarUsuario(Users usuario);
@@ -19,6 +19,6 @@ public interface IUserService {
 	public Users actualizarUsuario(Users usuario);
 	
 	// Elimina al usuario
-	public void eliminarUsuario(int codigo);
+	public void eliminarUsuarioXEmail(String email);
 	
 }

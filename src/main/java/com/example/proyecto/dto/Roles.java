@@ -32,7 +32,7 @@ public class Roles{
     @Column(nullable=false, length=255)
     private String nombre;
 
-    @OneToMany(mappedBy="rol")
+    @OneToMany(mappedBy="roles")
     private List<Users> usuarios;
     
     /** Default constructor. */
