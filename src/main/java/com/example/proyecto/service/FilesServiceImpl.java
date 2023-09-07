@@ -16,32 +16,43 @@ public class FilesServiceImpl implements IFilesService{
 	
 	@Override
 	public List<Files> listarFiles() {
-		// TODO Auto-generated method stub
 		return iFilesDAO.findAll();
 	}
 
 	@Override
 	public Files fileID(int codigo) {
-		// TODO Auto-generated method stub
 		return iFilesDAO.findById(codigo).get();
+	}
+	@Override
+	public Files fileNombre(String nombre) {
+		return iFilesDAO.findByNombre(nombre);
 	}
 
 	@Override
+	public Files fileExtension(String extension) {
+		return iFilesDAO.findByExtension(extension);
+	}
+	
+	@Override
 	public Files guardarFile(Files file) {
-		// TODO Auto-generated method stub
 		return iFilesDAO.save(file);
 	}
 
 	@Override
 	public Files actualizarFile(Files file) {
-		// TODO Auto-generated method stub
 		return iFilesDAO.save(file);
 	}
 
 	@Override
 	public void eliminarFile(int codigo) {
-		// TODO Auto-generated method stub
 		iFilesDAO.deleteById(codigo);
 	}
+
+	@Override
+	public void eliminarFileByNombre(String nombre) {
+		iFilesDAO.deleteByNombre(nombre);
+	}
+
+	
 
 }

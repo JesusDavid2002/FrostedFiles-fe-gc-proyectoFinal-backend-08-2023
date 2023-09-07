@@ -36,6 +36,16 @@ public class FileController {
         return categoriesServiceImpl.fileID(codigo);
     }
 	
+	@GetMapping("/{nombre}")
+    public Files fileNombre(@PathVariable("nombre") String nombre){
+        return categoriesServiceImpl.fileNombre(nombre);
+    }
+	
+	@GetMapping("/{extension}")
+    public Files fileExtension(@PathVariable("extension") String extension){
+        return categoriesServiceImpl.fileExtension(extension);
+    }
+	
     @PostMapping("/add")
     public ResponseEntity<Files> guardarFile(@RequestBody Files file){
         return ResponseEntity.ok(categoriesServiceImpl.guardarFile(file));
@@ -49,5 +59,10 @@ public class FileController {
     @DeleteMapping("/{id}")
     public void eliminarFile(@PathVariable("id") int codigo){
     	categoriesServiceImpl.eliminarFile(codigo);
+    }
+    
+    @DeleteMapping("/{nombre}")
+    public void eliminarFile(@PathVariable("nombre") String nombre){
+    	categoriesServiceImpl.eliminarFileByNombre(nombre);
     }
 }

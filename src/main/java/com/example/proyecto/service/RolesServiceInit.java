@@ -2,7 +2,6 @@ package com.example.proyecto.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dao.IRolesDAO;
 import com.example.proyecto.dto.Roles;
@@ -11,8 +10,7 @@ import com.example.proyecto.dto.RolesEnum;
 import jakarta.annotation.PostConstruct;
 
 @Component
-@Service
-public class RolesServiceImpl {
+public class RolesServiceInit {
 
 	@Autowired
 	private IRolesDAO iRolesDAO;

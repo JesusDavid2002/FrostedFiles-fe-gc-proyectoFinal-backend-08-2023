@@ -57,6 +57,7 @@ public class AuthService {
 		Roles role = iRolesDAO.findByNombre(request.getRole());
 		
 		if(role == null) {
+			role = new Roles();
 			role.setNombre("USER");
 		}
 		

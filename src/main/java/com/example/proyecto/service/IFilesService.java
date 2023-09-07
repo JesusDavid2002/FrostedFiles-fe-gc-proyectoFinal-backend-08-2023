@@ -12,6 +12,12 @@ public interface IFilesService {
 	// Muestra el archivo con esa id
 	public Files fileID(int codigo);
 	
+	// Muestra el archivo con ese nombre
+	public Files fileNombre(String nombre);
+	
+	// Muestra los archivos con esa extension
+	public Files fileExtension(String extension);
+	
 	// Guarda el archivo
 	public Files guardarFile(Files file);
 
@@ -20,4 +26,7 @@ public interface IFilesService {
 	
 	// Elimina el archivo
 	public void eliminarFile(int codigo);
+	
+	// Elimina el archivo
+	public void eliminarFileByNombre(String nombre);
 }
