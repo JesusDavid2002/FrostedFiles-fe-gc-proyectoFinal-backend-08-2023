@@ -3,14 +3,19 @@
 package com.example.proyecto.dto;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,10 +24,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="users")
-public class Users {
+public class Users implements UserDetails{
 
     /** Primary key. */
     protected static final String PK = "id";
@@ -32,191 +45,75 @@ public class Users {
     @Column(unique=true, nullable=false)
     private int id;
     
-    @Column(nullable=false, length=255)
+    @Column(name="nombre", nullable=false, length=255)
     private String nombre;
     
     @Column(name="password", nullable=false, length=25)
-    private String contraseña;
+    private String password;
     
-    @Column(nullable=false, length=255)
-    private String email;
+    @Column(name="email", unique=true, nullable=false, length=255)
+    private String username;
     
     @Column(name="fecha_creacion", nullable=false)
     private LocalDateTime fechaCreacion;
-    
-    @Column(name="es_moderador")
-    private boolean esModerador;
-    
-    @Column(name="es_admin")
-    private boolean esAdmin;
-    
+        
     @ManyToOne
-    @JoinColumn(name="rol")
+    @JoinColumn(name="role")
     private Roles roles;
 
-    @OneToMany(mappedBy="users")
+    @OneToMany(mappedBy="users",fetch = FetchType.LAZY)
     private List<Acciones> acciones;
     
-    /** Default constructor. */
-    public Users() {}
-
     
-    public Users(int id, String nombre, String password, String email, LocalDateTime fechaCreacion, boolean esModerador, boolean esAdmin,
-			Roles roles, List<Acciones> acciones) {
-		this.id = id;
-		this.nombre = nombre;
-		this.contraseña = password;
-		this.email = email;
-		this.fechaCreacion = fechaCreacion;
-		this.esModerador = esModerador;
-		this.esAdmin = esAdmin;
-		this.roles = roles;
-		this.acciones = acciones;
-	}
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int aId) {
-        id = aId;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String aNombre) {
-        nombre = aNombre;
-    }
-
-    public String getContraseña() {
-		return contraseña;
-	}
-
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
-	}
-
-	public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String aEmail) {
-        email = aEmail;
-    }
-
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDateTime aFechaCreacion) {
-        fechaCreacion = aFechaCreacion;
-    }
-
-    public boolean getEsModerador() {
-        return esModerador;
-    }
-
-    public void setEsModerador(boolean aEsModerador) {
-        esModerador = aEsModerador;
-    }
-
-    public boolean getEsAdmin() {
-        return esAdmin;
-    }
-
-    public void setEsAdmin(boolean aEsAdmin) {
-        esAdmin = aEsAdmin;
-    }
-
-    public Roles getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Roles roles) {
-		this.roles = roles;
-	}
-	
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY)
 	public List<Acciones> getAcciones() {
 		return acciones;
 	}
 
-	public void setAcciones(List<Acciones> acciones) {
-		this.acciones = acciones;
+
+	//USER DETAILS
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority((roles.getNombre())));
 	}
 
 
-	/**
-     * Compares the key for this instance with another Users.
-     *
-     * @param other The object to compare to
-     * @return True if other object is instance of class Users and the key objects are equal
-     */
-    private boolean equalKeys(Object other) {
-        if (this==other) {
-            return true;
-        }
-        if (!(other instanceof Users)) {
-            return false;
-        }
-        Users that = (Users) other;
-        if (this.getId() != that.getId()) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return this.password;
+	}
 
-    /**
-     * Compares this instance with another Users.
-     *
-     * @param other The object to compare to
-     * @return True if the objects are the same
-     */
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Users)) return false;
-        return this.equalKeys(other) && ((Users)other).equalKeys(this);
-    }
 
-    /**
-     * Returns a hash code for this instance.
-     *
-     * @return Hash code
-     */
-    @Override
-    public int hashCode() {
-        int i;
-        int result = 17;
-        i = getId();
-        result = 37*result + i;
-        return result;
-    }
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return this.username;
+	}
 
-    /**
-     * Returns a debug-friendly String representation of this instance.
-     *
-     * @return String representation of this instance
-     */
-    @Override
-    public String toString() {
-        StringBuffer sb = new StringBuffer("[Users |");
-        sb.append(" id=").append(getId());
-        sb.append("]");
-        return sb.toString();
-    }
 
-    /**
-     * Return all elements of the primary key.
-     *
-     * @return Map of key names to values
-     */
-    public Map<String, Object> getPrimaryKey() {
-        Map<String, Object> ret = new LinkedHashMap<String, Object>(6);
-        ret.put("id", Integer.valueOf(getId()));
-        return ret;
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 
 }

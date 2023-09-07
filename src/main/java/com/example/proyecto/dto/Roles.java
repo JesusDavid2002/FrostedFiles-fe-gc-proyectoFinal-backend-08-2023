@@ -11,45 +11,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="roles")
-public class Roles{
+public class Roles {
 
     /** Primary key. */
-    protected static final String PK = "id";   
+    protected static final String PK = "nombre";
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(unique=true, nullable=false)
-    private int id;
-    
-    @Column(nullable=false, length=255)
+    @Column(unique=true, nullable=false, length=255)
     private String nombre;
 
-    @OneToMany(mappedBy="roles")
-    private List<Users> usuarios;
+    @OneToMany(mappedBy="roles", fetch = FetchType.LAZY)
+    private List<Users>users;
     
-    /** Default constructor. */
-    public Roles() {}
-
-	public Roles(int id, String nombre, List<Users> usuarios) {
-		this.id = id;
-		this.nombre = nombre;
-		this.usuarios = usuarios;
-	}
-
-	public int getId() {
-        return id;
-    }
-
-    public void setId(int aId) {
-        id = aId;
+    public Roles(String rol) {
+    	this.nombre = rol;
     }
 
     public String getNombre() {
@@ -59,15 +44,14 @@ public class Roles{
     public void setNombre(String aNombre) {
         nombre = aNombre;
     }
-
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY)
-    public List<Users> getUsuarios() {
-		return usuarios;
+    
+    @JsonIgnore
+	public List<Users> getUsers() {
+		return users;
 	}
 
-	public void setUsuarios(List<Users> usuarios) {
-		this.usuarios = usuarios;
+	public void setUsers(List<Users> users) {
+		this.users = users;
 	}
 
 	/**
@@ -84,7 +68,9 @@ public class Roles{
             return false;
         }
         Roles that = (Roles) other;
-        if (this.getId() != that.getId()) {
+        Object myNombre = this.getNombre();
+        Object yourNombre = that.getNombre();
+        if (myNombre==null ? yourNombre!=null : !myNombre.equals(yourNombre)) {
             return false;
         }
         return true;
@@ -111,7 +97,11 @@ public class Roles{
     public int hashCode() {
         int i;
         int result = 17;
-        i = getId();
+        if (getNombre() == null) {
+            i = 0;
+        } else {
+            i = getNombre().hashCode();
+        }
         result = 37*result + i;
         return result;
     }
@@ -124,7 +114,7 @@ public class Roles{
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("[Roles |");
-        sb.append(" id=").append(getId());
+        sb.append(" nombre=").append(getNombre());
         sb.append("]");
         return sb.toString();
     }
@@ -136,7 +126,7 @@ public class Roles{
      */
     public Map<String, Object> getPrimaryKey() {
         Map<String, Object> ret = new LinkedHashMap<String, Object>(6);
-        ret.put("id", Integer.valueOf(getId()));
+        ret.put("nombre", getNombre());
         return ret;
     }
 
