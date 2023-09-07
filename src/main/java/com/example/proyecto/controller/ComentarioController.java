@@ -19,7 +19,7 @@ import com.example.proyecto.service.ComentariosServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/comentarios")
 @RequiredArgsConstructor
 public class ComentarioController {
 

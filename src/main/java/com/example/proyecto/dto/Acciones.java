@@ -43,7 +43,7 @@ public class Acciones {
     private List<DatosEstadisticos> datosEstadisiticos;
 
     @ManyToOne
-    @JoinColumn(name="user")
+    @JoinColumn(name="id_user")
     private Users users;
 
     @ManyToOne

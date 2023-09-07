@@ -6,9 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.proyecto.dto.Users;
 
-public interface IUsersDAO  extends JpaRepository<Users, Integer>{
+public interface UserRepository extends JpaRepository<Users, Integer>{
+	Optional<Users> findByUsername(String username);
 	
-	Optional<Users> findByEmail(String email);
-	
-	void deleteByEmail(String email);
+	void deleteByUsername(String username);
 }
