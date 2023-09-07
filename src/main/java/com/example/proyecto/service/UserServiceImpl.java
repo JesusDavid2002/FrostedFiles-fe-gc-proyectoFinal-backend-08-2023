@@ -18,34 +18,23 @@ public class UserServiceImpl implements IUserService{
 	
 	@Override
 	public List<Users> listarUsuarios() {
-		// TODO Auto-generated method stub
 		return userRepository.findAll();
 	}
 
 	@Override
 	public Users usuarioEmail(String email) {
-		// TODO Auto-generated method stub
 		return userRepository.findByUsername(email).get();
 	}
 
 	@Override
-	public Users guardarUsuario(Users usuario) {
-		// TODO Auto-generated method stub
-		return userRepository.save(usuario);
-	}
-
-	@Override
 	public Users actualizarUsuario(Users usuario) {
-		// TODO Auto-generated method stub
-		usuario.setRoles(usuario.getRoles());
 		return userRepository.save(usuario);
 	}
 
 	@Override
 	@Transactional
 	public void eliminarUsuarioXEmail(String email) {
-		// TODO Auto-generated method stub
 		userRepository.deleteByUsername(email);
 	}
-
+	
 }

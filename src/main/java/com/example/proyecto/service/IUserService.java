@@ -11,9 +11,6 @@ public interface IUserService {
 	
 	// Muestra el usuario con ese correo
 	public Users usuarioEmail(String codigo);
-	
-	// Guarda el usuario
-	public Users guardarUsuario(Users usuario);
 
 	// Actualiza el usuario
 	public Users actualizarUsuario(Users usuario);
