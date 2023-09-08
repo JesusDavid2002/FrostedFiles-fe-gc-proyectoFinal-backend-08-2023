@@ -17,6 +17,7 @@ import com.example.proyecto.dto.Multimedia;
 import com.example.proyecto.service.MultimediaServiceImpl;
 
 import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/multimedia")
 @RequiredArgsConstructor

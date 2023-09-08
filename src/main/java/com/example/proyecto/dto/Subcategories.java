@@ -2,6 +2,7 @@
 
 package com.example.proyecto.dto;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="subcategories")
 public class Subcategories{
@@ -35,55 +44,18 @@ public class Subcategories{
     private String nombre;
     
     @ManyToOne
-    @JoinColumn(name="categoria")
-    private Categories categoria;
+    @JoinColumn(name="category_nombre", nullable=false)
+    private Categories categories;
     
     @OneToMany(mappedBy="subcategoria")
     private List<Files> files;
     
-    /** Default constructor. */
-    public Subcategories() {}
-
-    public Subcategories(int subcategoryId, String nombre, Categories categories, List<Files> files) {
-		this.subcategoryId = subcategoryId;
-		this.nombre = nombre;
-		this.categoria = categories;
-		this.files = files;
-	}
-
-    public int getSubcategoryId() {
-        return subcategoryId;
-    }
-
-    public void setSubcategoryId(int aSubcategoryId) {
-        subcategoryId = aSubcategoryId;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String aNombre) {
-        nombre = aNombre;
-    }
-
-    public Categories getCategories() {
-		return categoria;
-	}
-
-	public void setCategories(Categories categories) {
-		this.categoria = categories;
-	}
-	
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY)
 	public List<Files> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<Files> files) {
-		this.files = files;
-	}
 
 	/**
      * Compares the key for this instance with another Subcategories.

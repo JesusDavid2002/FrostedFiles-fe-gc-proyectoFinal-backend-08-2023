@@ -16,32 +16,42 @@ public class CategoriesServiceImpl implements ICategoriesService{
 	
 	@Override
 	public List<Categories> listarCategories() {
-		// TODO Auto-generated method stub
 		return iCategoriesDAO.findAll();
 	}
 
 	@Override
 	public Categories categoryID(int codigo) {
-		// TODO Auto-generated method stub
 		return iCategoriesDAO.findById(codigo).get();
 	}
-
+	
+	@Override
+	public Categories categoryNombre(String nombre) {
+		return iCategoriesDAO.getByNombre(nombre);
+	}
+		
 	@Override
 	public Categories guardarCategory(Categories category) {
-		// TODO Auto-generated method stub
 		return iCategoriesDAO.save(category);
 	}
 
 	@Override
-	public Categories actualizarCategory(Categories category) {
-		// TODO Auto-generated method stub
-		return iCategoriesDAO.save(category);
+	public Categories actualizarCategory(String nombre, Categories category) {
+		Categories categoriaSelect = iCategoriesDAO.getByNombre(nombre);
+
+		categoriaSelect.setNombre(category.getNombre());
+		return iCategoriesDAO.save(categoriaSelect);
 	}
 
 	@Override
 	public void eliminarCategory(int codigo) {
-		// TODO Auto-generated method stub
 		iCategoriesDAO.deleteById(codigo);
 	}
+
+	@Override
+	public void eliminarCategoryXNombre(String nombre) {
+		iCategoriesDAO.deleteByNombre(nombre);
+	}
+
+	
 
 }

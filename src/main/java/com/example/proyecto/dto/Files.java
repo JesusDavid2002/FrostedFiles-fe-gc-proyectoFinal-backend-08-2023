@@ -49,11 +49,11 @@ public class Files {
     private boolean visibilidad;
     
     @ManyToOne
-    @JoinColumn(name="categoria_id")
+    @JoinColumn(name="category_nombre")
     private Categories categoria;
     
     @ManyToOne
-    @JoinColumn(name="subcategoria_id")
+    @JoinColumn(name="subcategory_nombre")
     private Subcategories subcategoria;
     
     @OneToMany(mappedBy="files")

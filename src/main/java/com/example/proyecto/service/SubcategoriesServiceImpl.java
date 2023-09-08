@@ -16,32 +16,36 @@ public class SubcategoriesServiceImpl implements ISubcategoriesService{
 	
 	@Override
 	public List<Subcategories> listarSubcategories() {
-		// TODO Auto-generated method stub
 		return iSubcategoriesDAO.findAll();
 	}
 
 	@Override
 	public Subcategories subcategoryID(int codigo) {
-		// TODO Auto-generated method stub
 		return iSubcategoriesDAO.findById(codigo).get();
 	}
 
 	@Override
 	public Subcategories guardarSubcategory(Subcategories subcategory) {
-		// TODO Auto-generated method stub
 		return iSubcategoriesDAO.save(subcategory);
 	}
 
 	@Override
-	public Subcategories actualizarSubcategory(Subcategories subcategory) {
-		// TODO Auto-generated method stub
-		return iSubcategoriesDAO.save(subcategory);
+	public Subcategories actualizarSubcategory(String nombre, Subcategories subcategory) {
+		Subcategories subcategorySelect = iSubcategoriesDAO.getByNombre(nombre);
+		
+		subcategorySelect.setNombre(subcategory.getNombre());
+		return iSubcategoriesDAO.save(subcategorySelect);
 	}
 
 	@Override
 	public void eliminarSubcategory(int codigo) {
-		// TODO Auto-generated method stub
 		iSubcategoriesDAO.deleteById(codigo);
 	}
+
+	@Override
+	public void eliminarSubcategoryXNombre(String nombre) {
+		iSubcategoriesDAO.deleteByNombre(nombre);
+	}
+
 
 }
