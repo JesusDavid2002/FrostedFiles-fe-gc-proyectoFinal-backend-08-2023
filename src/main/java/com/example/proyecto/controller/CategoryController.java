@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.proyecto.dto.Categories;
 import com.example.proyecto.service.CategoriesServiceImpl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -41,13 +42,14 @@ public class CategoryController {
         return ResponseEntity.ok(categoriesServiceImpl.guardarCategory(category));
     }
     
-    @PutMapping("/update")
-    public ResponseEntity<Categories> actualizarCategory(@RequestBody Categories category){
-        return ResponseEntity.ok(categoriesServiceImpl.actualizarCategory(category));
+    @PutMapping("/{nombre}")
+    public ResponseEntity<Categories> actualizarCategory(@PathVariable("nombre") String nombre, @RequestBody Categories category){
+    	return ResponseEntity.ok(categoriesServiceImpl.actualizarCategory(nombre, category));
     }
-    
-    @DeleteMapping("/{id}")
-    public void eliminarCategory(@PathVariable("id") int codigo){
-    	categoriesServiceImpl.eliminarCategory(codigo);
+        
+    @DeleteMapping("/{nombre}")
+    @Transactional
+    public void eliminarCategoryXNombre(@PathVariable("nombre") String nombre){
+    	categoriesServiceImpl.eliminarCategoryXNombre(nombre);
     }
 }

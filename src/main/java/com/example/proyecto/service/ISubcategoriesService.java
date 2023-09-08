@@ -16,8 +16,11 @@ public interface ISubcategoriesService {
 	public Subcategories guardarSubcategory(Subcategories subcategory);
 
 	// Actualiza el role
-	public Subcategories actualizarSubcategory(Subcategories subcategory);
+	public Subcategories actualizarSubcategory(String nombre, Subcategories subcategory);
 	
 	// Elimina la subcategoria
 	public void eliminarSubcategory(int codigo);
+	
+	// Elimina la subcategoria
+	public void eliminarSubcategoryXNombre(String nombre);
 }

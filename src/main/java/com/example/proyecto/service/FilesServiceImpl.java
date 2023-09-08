@@ -39,8 +39,13 @@ public class FilesServiceImpl implements IFilesService{
 	}
 
 	@Override
-	public Files actualizarFile(Files file) {
-		return iFilesDAO.save(file);
+	public Files actualizarFile(String nombre, Files file) {
+		Files fileSelect = iFilesDAO.findByNombre(nombre);
+		
+		fileSelect.setNombre(file.getNombre());
+		fileSelect.setVisibilidad(file.getVisibilidad());
+		
+		return iFilesDAO.save(fileSelect);
 	}
 
 	@Override

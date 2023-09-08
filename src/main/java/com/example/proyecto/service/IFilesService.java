@@ -22,7 +22,7 @@ public interface IFilesService {
 	public Files guardarFile(Files file);
 
 	// Actualiza el archivo
-	public Files actualizarFile(Files file);
+	public Files actualizarFile(String nombre, Files file);
 	
 	// Elimina el archivo
 	public void eliminarFile(int codigo);
