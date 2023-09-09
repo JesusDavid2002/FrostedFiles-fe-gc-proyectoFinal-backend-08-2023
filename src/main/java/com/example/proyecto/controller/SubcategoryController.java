@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,6 +43,7 @@ public class SubcategoryController {
     }
 	
     @PostMapping("/add")
+    @Transactional
     public ResponseEntity<Subcategories> guardarSubcategory(@RequestBody Subcategories subcategory){
     	String categoryName = subcategory.getCategories().getNombre();
     	Categories category = categoriesServiceImpl.categoryNombre(categoryName);
@@ -52,10 +52,9 @@ public class SubcategoryController {
     		Categories newCategory = new Categories();
     		newCategory.setNombre(categoryName);
     		categoriesServiceImpl.guardarCategory(newCategory);
-    		subcategory.setCategories(newCategory);
-    	} else {
-    		subcategory.setCategories(category);
+            category = categoriesServiceImpl.categoryNombre(categoryName);
     	}
+    	subcategory.setCategories(category);
         return ResponseEntity.ok(subcategoriesServiceImpl.guardarSubcategory(subcategory));
     }
     

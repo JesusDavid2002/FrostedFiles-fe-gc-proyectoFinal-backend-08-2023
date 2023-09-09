@@ -13,7 +13,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="multimedia")
 public class Multimedia {
@@ -30,43 +38,10 @@ public class Multimedia {
     private String tipo;
     
     @ManyToOne
-    @JoinColumn(name="file")
+    @JoinColumn(name="files_name", referencedColumnName="nombre")
     private Files files;
 
-    /** Default constructor. */
-    public Multimedia() {}
-
-    public Multimedia(int id, String tipo, Files files) {
-		this.id = id;
-		this.tipo = tipo;
-		this.files = files;
-	}
-
-	public int getId() {
-        return id;
-    }
-
-    public void setId(int aId) {
-        id = aId;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String aTipo) {
-        tipo = aTipo;
-    }
-
-    public Files getFiles() {
-		return files;
-	}
-
-	public void setFiles(Files files) {
-		this.files = files;
-	}
-
-	/**
+    /**
      * Compares the key for this instance with another Multimedia.
      *
      * @param other The object to compare to

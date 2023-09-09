@@ -23,7 +23,11 @@ public class SubcategoriesServiceImpl implements ISubcategoriesService{
 	public Subcategories subcategoryID(int codigo) {
 		return iSubcategoriesDAO.findById(codigo).get();
 	}
-
+	
+	@Override
+	public Subcategories subcategoryNombre(String nombre) {
+		return iSubcategoriesDAO.getByNombre(nombre);
+	}
 	@Override
 	public Subcategories guardarSubcategory(Subcategories subcategory) {
 		return iSubcategoriesDAO.save(subcategory);
@@ -46,6 +50,8 @@ public class SubcategoriesServiceImpl implements ISubcategoriesService{
 	public void eliminarSubcategoryXNombre(String nombre) {
 		iSubcategoriesDAO.deleteByNombre(nombre);
 	}
+
+	
 
 
 }

@@ -2,10 +2,13 @@
 
 package com.example.proyecto.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +17,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="comentarios")
 public class Comentarios {
@@ -34,50 +45,10 @@ public class Comentarios {
     private LocalDateTime fecha;
 
     @ManyToOne
-    @JoinColumn(name="file")
+    @JoinColumn(name="files_name", referencedColumnName="nombre")
     private Files files;
 
-    /** Default constructor. */
-    public Comentarios() {}
-
-    public Comentarios(int id, String texto, LocalDateTime fecha, Files files) {
-		this.id = id;
-		this.texto = texto;
-		this.fecha = fecha;
-		this.files = files;
-	}
-
-	public int getId() {
-        return id;
-    }
-
-    public void setId(int aId) {
-        id = aId;
-    }
-
-    public String getTexto() {
-        return texto;
-    }
-
-    public void setTexto(String aTexto) {
-        texto = aTexto;
-    }
-
-    public LocalDateTime getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDateTime aFecha) {
-        fecha = aFecha;
-    }
-
-    public Files getFiles() {
-		return files;
-	}
-
-	public void setFiles(Files files) {
-		this.files = files;
-	}
+   
 
 	/**
      * Compares the key for this instance with another Comentarios.

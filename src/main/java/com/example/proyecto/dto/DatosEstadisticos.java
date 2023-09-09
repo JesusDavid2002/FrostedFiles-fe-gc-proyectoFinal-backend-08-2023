@@ -2,7 +2,9 @@
 
 package com.example.proyecto.dto;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.persistence.Column;
@@ -13,7 +15,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="datos_estadisticos")
 public class DatosEstadisticos {
@@ -33,38 +43,6 @@ public class DatosEstadisticos {
     @JoinColumn(name="tipo_acciones")
     private Acciones acciones;
     
-    /** Default constructor. */
-    public DatosEstadisticos() {}
-
-    public DatosEstadisticos(int id, int cantidad, Acciones acciones) {
-		this.id = id;
-		this.cantidad = cantidad;
-		this.acciones = acciones;
-	}
-
-	public int getId() {
-        return id;
-    }
-
-    public void setId(int aId) {
-        id = aId;
-    }
-
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(int aCantidad) {
-        cantidad = aCantidad;
-    }
-
-    public Acciones getAcciones() {
-		return acciones;
-	}
-
-	public void setAcciones(Acciones acciones) {
-		this.acciones = acciones;
-	}
 
 	/**
      * Compares the key for this instance with another DatosEstadisticos.

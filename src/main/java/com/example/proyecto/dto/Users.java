@@ -14,8 +14,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,16 +43,16 @@ public class Users implements UserDetails{
     @Column(unique=true, nullable=false)
     private int id;
     
-    @Column(name="nombre", nullable=false, length=255)
+    @Column(name="nombre", length=255)
     private String nombre;
     
-    @Column(name="password", nullable=false, length=25)
+    @Column(name="password", length=25)
     private String password;
     
     @Column(name="email", unique=true, nullable=false, length=255)
     private String username;
     
-    @Column(name="fecha_creacion", nullable=false)
+    @Column(name="fecha_creacion")
     private LocalDateTime fechaCreacion;
         
     @ManyToOne

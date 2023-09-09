@@ -37,25 +37,27 @@ public class Subcategories{
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="subcategory_id", unique=true, nullable=false)
+    @Column(name="subcategory_id", nullable=false)
     private int subcategoryId;
     
-    @Column(length=255)
+    @Column(length=255, nullable=false)
     private String nombre;
     
     @ManyToOne
-    @JoinColumn(name="category_nombre", nullable=false)
+    @JoinColumn(name="category_nombre", referencedColumnName="nombre")
     private Categories categories;
     
-    @OneToMany(mappedBy="subcategoria")
+    @OneToMany(mappedBy="subcategories", fetch = FetchType.LAZY)
     private List<Files> files;
     
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY)
 	public List<Files> getFiles() {
 		return files;
 	}
-
+	
+	public Subcategories(String nombre) {
+		this.nombre = nombre;
+	}
 
 	/**
      * Compares the key for this instance with another Subcategories.
@@ -126,5 +128,8 @@ public class Subcategories{
         ret.put("subcategoryId", Integer.valueOf(getSubcategoryId()));
         return ret;
     }
+
+
+	
 
 }

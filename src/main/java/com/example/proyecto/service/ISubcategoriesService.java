@@ -12,6 +12,8 @@ public interface ISubcategoriesService {
 	// Muestra la subcategoria con esa id
 	public Subcategories subcategoryID(int codigo);
 	
+	public Subcategories subcategoryNombre(String nombre);
+	
 	// Guarda la subcategoria
 	public Subcategories guardarSubcategory(Subcategories subcategory);
 
@@ -23,4 +25,5 @@ public interface ISubcategoriesService {
 	
 	// Elimina la subcategoria
 	public void eliminarSubcategoryXNombre(String nombre);
+
 }

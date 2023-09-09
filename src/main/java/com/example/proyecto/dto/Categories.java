@@ -32,10 +32,10 @@ public class Categories {
     @Column(length=255)
     private String nombre;
 
-    @OneToMany(mappedBy="categories")
+    @OneToMany(mappedBy="categories",fetch = FetchType.LAZY)
     private List<Subcategories> subcategories;
 
-    @OneToMany(mappedBy="categoria",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="categories",fetch = FetchType.LAZY)
     private List<Files> files;
     
     /** Default constructor. */
@@ -78,7 +78,6 @@ public class Categories {
 	}
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY)
 	public List<Files> getFiles() {
 		return files;
 	}
