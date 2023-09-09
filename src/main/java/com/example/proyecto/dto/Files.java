@@ -3,6 +3,7 @@
 package com.example.proyecto.dto;
 
 import java.math.BigDecimal;
+import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,7 +21,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="files")
 public class Files {
@@ -33,150 +42,57 @@ public class Files {
     @Column(unique=true, nullable=false)
     private int id;
     
-    @Column(nullable=false, length=255)
+    @Column(name="nombre", nullable=false, length=255)
     private String nombre;
     
-    @Column(length=10)
+    @Column(name="extension", length=10)
     private String extension;
     
     @Column(name="tamaño", precision=10, scale=2)
     private BigDecimal tamano;
     
-    @Column(name="fecha_subida", nullable=false)
+    @Column(name="fecha_subida")
     private LocalDateTime fechaSubida;
     
-    @Column
+    @Column(name="visibilidad")
     private boolean visibilidad;
+
+    @Column(name="contenido")
+    private Blob contenido;
     
     @ManyToOne
-    @JoinColumn(name="category_nombre")
-    private Categories categoria;
+    @JoinColumn(name="category_nombre", referencedColumnName="nombre")
+    private Categories categories;
     
     @ManyToOne
-    @JoinColumn(name="subcategory_nombre")
-    private Subcategories subcategoria;
+    @JoinColumn(name="subcategory_nombre", referencedColumnName="nombre")
+    private Subcategories subcategories;
     
-    @OneToMany(mappedBy="files")
+    @OneToMany(mappedBy="files", fetch = FetchType.LAZY)
     private List<Multimedia> multimedia;
 
-    @OneToMany(mappedBy="files")
+    @OneToMany(mappedBy="files", fetch = FetchType.LAZY)
     private List<Comentarios> comentarios;
     
-    @OneToMany(mappedBy="files")
+    @OneToMany(mappedBy="files", fetch = FetchType.LAZY)
     private List<Acciones> acciones;
 
-    /** Default constructor. */
-    public Files() {}
-
-    public Files(int id, String nombre, String extension, BigDecimal tamano, LocalDateTime fechaSubida,
-			boolean visibilidad, Categories categories, Subcategories subcategories, List<Multimedia> multimedia,
-			List<Comentarios> comentarios, List<Acciones> acciones) {
-		this.id = id;
-		this.nombre = nombre;
-		this.extension = extension;
-		this.tamano = tamano;
-		this.fechaSubida = fechaSubida;
-		this.visibilidad = visibilidad;
-		this.categoria = categories;
-		this.subcategoria = subcategories;
-		this.multimedia = multimedia;
-		this.comentarios = comentarios;
-		this.acciones = acciones;
-	}
-
-	public int getId() {
-        return id;
-    }
-
-    public void setId(int aId) {
-        id = aId;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String aNombre) {
-        nombre = aNombre;
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String aExtension) {
-        extension = aExtension;
-    }
-
-    public BigDecimal getTamano() {
-        return tamano;
-    }
-
-    public void setTamano(BigDecimal aTamano) {
-        tamano = aTamano;
-    }
-
-    public LocalDateTime getFechaSubida() {
-        return fechaSubida;
-    }
-
-    public void setFechaSubida(LocalDateTime aFechaSubida) {
-        fechaSubida = aFechaSubida;
-    }
-
-    public boolean getVisibilidad() {
-        return visibilidad;
-    }
-
-    public void setVisibilidad(boolean aVisibilidad) {
-        visibilidad = aVisibilidad;
-    }
-
-    public Categories getCategories() {
-		return categoria;
-	}
-
-	public void setCategories(Categories categories) {
-		this.categoria = categories;
-	}
-
-	public Subcategories getSubcategories() {
-		return subcategoria;
-	}
-
-	public void setSubcategories(Subcategories subcategories) {
-		this.subcategoria = subcategories;
-	}
-	
+    
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY)
 	public List<Multimedia> getMultimedia() {
 		return multimedia;
 	}
 
-	public void setMultimedia(List<Multimedia> multimedia) {
-		this.multimedia = multimedia;
-	}
-
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY)
 	public List<Comentarios> getComentarios() {
 		return comentarios;
 	}
 
-	public void setComentarios(List<Comentarios> comentarios) {
-		this.comentarios = comentarios;
-	}
-
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY)
 	public List<Acciones> getAcciones() {
 		return acciones;
 	}
 
-	public void setAcciones(List<Acciones> acciones) {
-		this.acciones = acciones;
-	}
 
 	/**
      * Compares the key for this instance with another Files.

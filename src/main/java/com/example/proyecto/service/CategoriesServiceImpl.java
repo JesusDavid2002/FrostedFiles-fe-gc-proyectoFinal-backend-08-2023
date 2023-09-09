@@ -52,6 +52,11 @@ public class CategoriesServiceImpl implements ICategoriesService{
 		iCategoriesDAO.deleteByNombre(nombre);
 	}
 
+	public void flush() {
+		// TODO Auto-generated method stub
+		iCategoriesDAO.flush();
+	}
+
 	
 
 }

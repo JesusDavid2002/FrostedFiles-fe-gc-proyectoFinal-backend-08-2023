@@ -19,14 +19,21 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="acciones")
 public class Acciones {
 
     /** Primary key. */
     protected static final String PK = "id";
-
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -39,80 +46,24 @@ public class Acciones {
     @Column(nullable=false)
     private LocalDateTime fecha;
 
-    @OneToMany(mappedBy="acciones")
+    @OneToMany(mappedBy="acciones",fetch = FetchType.LAZY)
     private List<DatosEstadisticos> datosEstadisiticos;
 
     @ManyToOne
-    @JoinColumn(name="id_user")
+    @JoinColumn(name="user_name", referencedColumnName="nombre")
     private Users users;
 
     @ManyToOne
-    @JoinColumn(name="file")
+    @JoinColumn(name="files_name", referencedColumnName="nombre")
     private Files files;
     
-    /** Default constructor. */
-    public Acciones() {}
-
-    public Acciones(int id, String tipoAccion, LocalDateTime fecha, List<DatosEstadisticos> datosEstadisiticos,
-			Users users, Files files) {
-		this.id = id;
-		this.tipoAccion = tipoAccion;
-		this.fecha = fecha;
-		this.datosEstadisiticos = datosEstadisiticos;
-		this.users = users;
-		this.files = files;
-	}
-
-	public int getId() {
-        return id;
-    }
-
-    public void setId(int aId) {
-        id = aId;
-    }
-
-    public String getTipoAccion() {
-        return tipoAccion;
-    }
-
-    public void setTipoAccion(String aTipoAccion) {
-        tipoAccion = aTipoAccion;
-    }
-
-    public LocalDateTime getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDateTime aFecha) {
-        fecha = aFecha;
-    }
-
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY)
     public List<DatosEstadisticos> getDatosEstadisiticos() {
 		return datosEstadisiticos;
 	}
-
-	public void setDatosEstadisiticos(List<DatosEstadisticos> datosEstadisiticos) {
-		this.datosEstadisiticos = datosEstadisiticos;
-	}
-
-	public Users getUsers() {
-		return users;
-	}
-
-	public void setUsers(Users users) {
-		this.users = users;
-	}
-
-	public Files getFiles() {
-		return files;
-	}
-
-	public void setFiles(Files files) {
-		this.files = files;
-	}
-
+    
+    
+    
 	/**
      * Compares the key for this instance with another Acciones.
      *
@@ -182,5 +133,7 @@ public class Acciones {
         ret.put("id", Integer.valueOf(getId()));
         return ret;
     }
+
+
 
 }

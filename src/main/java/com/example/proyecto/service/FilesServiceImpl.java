@@ -43,7 +43,7 @@ public class FilesServiceImpl implements IFilesService{
 		Files fileSelect = iFilesDAO.findByNombre(nombre);
 		
 		fileSelect.setNombre(file.getNombre());
-		fileSelect.setVisibilidad(file.getVisibilidad());
+		fileSelect.setVisibilidad(file.isVisibilidad());
 		
 		return iFilesDAO.save(fileSelect);
 	}
