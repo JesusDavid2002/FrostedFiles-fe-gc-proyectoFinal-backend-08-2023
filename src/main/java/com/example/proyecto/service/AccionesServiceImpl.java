@@ -1,6 +1,10 @@
 package com.example.proyecto.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,29 @@ public class AccionesServiceImpl implements IAccionesService{
 	public void eliminarAccion(int codigo) {
 		// TODO Auto-generated method stub
 		iAccionesDAO.deleteById(codigo);
+	}
+	
+	@Override
+	public Map<String, Map<String, Integer>> obtenerEstadisiticasMensuales(List<Acciones> acciones) {
+				
+		Map<String, Map<String, Integer>> estadisticaMensual = new HashMap<>();
+		
+		for(Acciones accion : acciones) {
+			LocalDateTime fecha = accion.getFecha();
+			String mes = obtenerMes(fecha);
+			String tipo = accion.getTipoAccion();
+			
+			estadisticaMensual.putIfAbsent(mes, new HashMap<>());
+			Map<String, Integer> estadisiticaTipo = estadisticaMensual.get(mes);
+			estadisiticaTipo.put(tipo, estadisiticaTipo.getOrDefault(tipo, 0) + 1);
+			
+		}
+		return estadisticaMensual;
+	}
+
+	private String obtenerMes(LocalDateTime fecha) {
+		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("MMMM");
+		return fecha.format(formatoFecha);
 	}
 
 }

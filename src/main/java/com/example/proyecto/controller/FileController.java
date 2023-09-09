@@ -1,9 +1,16 @@
 package com.example.proyecto.controller;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.http.HttpHeaders;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.proyecto.dao.ICategoriesDAO;
 import com.example.proyecto.dao.ISubcategoriesDAO;
@@ -58,40 +67,58 @@ public class FileController {
         return fileServiceImpl.fileExtension(extension);
     }
 	
-    @PostMapping("/add")
-    public ResponseEntity<Files> guardarFile(@RequestBody Files file){
+//	@GetMapping("/descargar/{nombre}")
+//	public ResponseEntity<InputStreamResource> descargarFile(@PathVariable("nombre") String nombre){
+//		Files files = fileServiceImpl.fileNombre(nombre);
+//		
+//		InputStreamResource dato = new InputStreamResource(files.getInputStream());
+//		
+//		return ResponseEntity.ok()
+//				.header("Content", "; Nombre del fichero = " +files.getNombre())
+//				.contentType(MediaType.parseMediaType(files.getC))
+//    }
+	
+    @PostMapping(value="/add", consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Files> guardarFile(@RequestParam("contenido") MultipartFile file,
+    	    @RequestParam("nombre") String nombre,
+    	    @RequestParam("extension") String extension,
+    	    @RequestParam("tamano") BigDecimal tamano,
+    	    @RequestParam("fechaSubida") LocalDateTime fechaSubida,
+    	    @RequestParam("visibilidad") boolean visibilidad,
+    	    @RequestParam("categories") String nombreCategoria,
+    		@RequestParam("subcategories") String nombreSubcategoria){
     	
-    	 // Verificar si se proporciona una categoría
-        if (file.getCategories() != null && file.getCategories().getNombre() != null) {
-            Optional<Categories> optionalCategory = category.findByNombre(file.getCategories().getNombre());
-            Categories existingCategory;
-            if (optionalCategory.isPresent()) {
-                existingCategory = optionalCategory.get();
-            } else {
-                // Si la categoría no existe, crear una nueva instancia
-                existingCategory = new Categories(file.getCategories().getNombre());
-            }
-            file.setCategories(existingCategory);
-        } else {
-            file.setCategories(null);
-        }
-
-        // Verificar si se proporciona una subcategoría
-        if (file.getSubcategories() != null && file.getSubcategories().getNombre() != null) {
-            Optional<Subcategories> optionalSubcategory = subcategory.findByNombre(file.getSubcategories().getNombre());
-            Subcategories existingSubcategory;
-            if (optionalSubcategory.isPresent()) {
-                existingSubcategory = optionalSubcategory.get();
-            } else {
-                // Si la subcategoría no existe, crear una nueva instancia
-                existingSubcategory = new Subcategories(file.getSubcategories().getNombre());
-            }
-            file.setSubcategories(existingSubcategory);
-        } else {
-            file.setSubcategories(null);
-        }
-
-        return ResponseEntity.ok(fileServiceImpl.guardarFile(file));
+		try {
+			byte[] contenido = file.getBytes();
+			Categories categories = null;
+			Subcategories subcategories = null;
+		
+			if (nombreCategoria != null && !nombreCategoria.isEmpty()) {
+	            Optional<Categories> optionalCategory = category.findByNombre(nombreCategoria);
+	            categories = optionalCategory.orElseGet(() -> new Categories(nombreCategoria));
+	        } 
+			if (nombreSubcategoria != null && !nombreSubcategoria.isEmpty()) {
+	            Optional<Subcategories> optionalSubcategory = subcategory.findByNombre(nombreSubcategoria);
+	            subcategories = optionalSubcategory.orElseGet(() -> new Subcategories(nombreSubcategoria));
+	        } 
+						
+			Files newFile = new Files();
+	    	newFile.setNombre(nombre);
+	    	newFile.setTamano(tamano);
+	    	newFile.setExtension(extension);
+	    	newFile.setFechaSubida(fechaSubida);
+	    	newFile.setVisibilidad(visibilidad);
+	    	newFile.setContenido(contenido);
+	    	newFile.setCategories(categories);
+	    	newFile.setSubcategories(subcategories);
+	    		        
+	        return ResponseEntity.ok(fileServiceImpl.guardarFile(newFile));
+	        
+		} catch (IOException e) {
+			e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+    	
     }
     
     @PatchMapping("/{nombre}")
