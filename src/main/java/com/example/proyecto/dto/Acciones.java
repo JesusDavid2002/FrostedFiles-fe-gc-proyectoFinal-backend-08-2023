@@ -4,20 +4,16 @@ package com.example.proyecto.dto;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,9 +42,6 @@ public class Acciones {
     @Column(nullable=false)
     private LocalDateTime fecha;
 
-    @OneToMany(mappedBy="acciones",fetch = FetchType.LAZY)
-    private List<DatosEstadisticos> datosEstadisiticos;
-
     @ManyToOne
     @JoinColumn(name="user_name", referencedColumnName="nombre")
     private Users users;
@@ -56,12 +49,6 @@ public class Acciones {
     @ManyToOne
     @JoinColumn(name="files_name", referencedColumnName="nombre")
     private Files files;
-    
-    @JsonIgnore
-    public List<DatosEstadisticos> getDatosEstadisiticos() {
-		return datosEstadisiticos;
-	}
-    
     
     
 	/**

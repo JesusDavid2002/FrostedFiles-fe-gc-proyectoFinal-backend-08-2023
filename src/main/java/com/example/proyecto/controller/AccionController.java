@@ -1,6 +1,7 @@
 package com.example.proyecto.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,18 @@ public class AccionController {
         return accionesServiceImpl.accionID(codigo);
     }
 	
-    @PostMapping("/add")
+	@GetMapping("/estadisticas")
+    public ResponseEntity<Map<String, Map<String, Integer>>> obtenerEstadisiticasMensuales(){
+		List<Acciones> acciones = accionesServiceImpl.listarAcciones();
+
+		Map<String, Map<String, Integer>> estadisticas = accionesServiceImpl.obtenerEstadisiticasMensuales(acciones);
+		
+        return ResponseEntity.ok(estadisticas);
+    }
+	
+    
+
+	@PostMapping("/add")
     public ResponseEntity<Acciones> guardarAccion(@RequestBody Acciones accion){
     	String nombreUsuario = accion.getUsers().getUsername();
         Optional<Users> optionalUser  = iUsers.findByUsername(nombreUsuario);

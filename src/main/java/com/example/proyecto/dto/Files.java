@@ -18,6 +18,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -56,9 +57,10 @@ public class Files {
     
     @Column(name="visibilidad")
     private boolean visibilidad;
-
-    @Column(name="contenido")
-    private Blob contenido;
+    
+    @Lob
+    @Column(name="contenido", columnDefinition="BLOB")
+    private byte[] contenido;
     
     @ManyToOne
     @JoinColumn(name="category_nombre", referencedColumnName="nombre")

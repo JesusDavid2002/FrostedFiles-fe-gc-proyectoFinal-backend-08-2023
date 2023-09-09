@@ -1,6 +1,7 @@
 package com.example.proyecto.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.proyecto.dto.Acciones;
 
@@ -20,4 +21,6 @@ public interface IAccionesService {
 	
 	// Elimina la accion
 	public void eliminarAccion(int codigo);
+	
+	public Map<String, Map<String, Integer>> obtenerEstadisiticasMensuales(List<Acciones> acciones);
 }
