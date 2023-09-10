@@ -2,16 +2,16 @@ package com.example.proyecto.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.http.HttpHeaders;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -57,17 +57,17 @@ public class FileController {
         return fileServiceImpl.listarFiles();
     }
 	
-	@GetMapping("/{id}")
+	@GetMapping("/id/{id}")
     public Files fileID(@PathVariable("id") int codigo){
         return fileServiceImpl.fileID(codigo);
     }
 	
-	@GetMapping("/{nombre}")
+	@GetMapping("/nombre/{nombre}")
     public Files fileNombre(@PathVariable("nombre") String nombre){
         return fileServiceImpl.fileNombre(nombre);
     }
 	
-	@GetMapping("/{extension}")
+	@GetMapping("/extension/{extension}")
     public Files fileExtension(@PathVariable("extension") String extension){
         return fileServiceImpl.fileExtension(extension);
     }
@@ -126,26 +126,18 @@ public class FileController {
     	
     }
     
-    @PostMapping("/compartir/{nombre}")
-    public ResponseEntity<String> compartirArchivo(@PathVariable("nombre") String nombre,
-    	    @RequestParam("destinatario") String destinatario,
-    	    @RequestParam("asunto") String asunto,
-    	    @RequestParam("mensaje") String mensaje) throws Exception{
+    @PostMapping("/compartir")
+    public ResponseEntity<String> compartirArchivo(@RequestBody ModeloCompartir request, @AuthenticationPrincipal UserDetails user) throws Exception{
     	try {
-    		Files files = fileServiceImpl.fileNombre(nombre);
-    		ModeloCompartir modelo = new ModeloCompartir(destinatario, asunto, mensaje);
-    		
-    		if(files == null) {
-    			return ResponseEntity.notFound().build();
-    		}
-    		
-    		compartirServiceImpl.compartirArchivo(modelo, files);
-	        return ResponseEntity.ok("Archivo compartido");
-    				
+		compartirServiceImpl.compartirArchivo(request, user);
+		
+        return ResponseEntity.ok("Archivo compartido");
+				
     	} catch (IOException e) {
 			e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
+    	
     }
     
     @PatchMapping("/{nombre}")

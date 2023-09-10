@@ -1,37 +1,25 @@
 package com.example.proyecto.dto;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ModeloCompartir {
 	
 	private String destinatario;
 	private String asunto;
 	private String mensaje;
-	
-	public ModeloCompartir() {}
-	
-	public ModeloCompartir(String destinatario, String asunto, String mensaje) {
-		this.destinatario = destinatario;
-		this.asunto = asunto;
-		this.mensaje = mensaje;
-	}
-	
-	public String getDestinatario() {
-		return destinatario;
-	}
-	public void setDestinatario(String destinatario) {
-		this.destinatario = destinatario;
-	}
-	public String getAsunto() {
-		return asunto;
-	}
-	public void setAsunto(String asunto) {
-		this.asunto = asunto;
-	}
-	public String getMensaje() {
-		return mensaje;
-	}
-	public void setMensaje(String mensaje) {
-		this.mensaje = mensaje;
-	}
+	private String nombreArchivo;
+	private Files file;
 	
 	
 }

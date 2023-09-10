@@ -3,7 +3,6 @@
 package com.example.proyecto.dto;
 
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
