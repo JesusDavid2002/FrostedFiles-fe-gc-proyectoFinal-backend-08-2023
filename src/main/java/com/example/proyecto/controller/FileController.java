@@ -27,7 +27,9 @@ import com.example.proyecto.dao.ICategoriesDAO;
 import com.example.proyecto.dao.ISubcategoriesDAO;
 import com.example.proyecto.dto.Categories;
 import com.example.proyecto.dto.Files;
+import com.example.proyecto.dto.ModeloCompartir;
 import com.example.proyecto.dto.Subcategories;
+import com.example.proyecto.service.CompartirFileServiceImpl;
 import com.example.proyecto.service.FilesServiceImpl;
 
 import jakarta.transaction.Transactional;
@@ -46,6 +48,9 @@ public class FileController {
 	
 	@Autowired
 	private ISubcategoriesDAO subcategory;
+	
+	@Autowired
+	private CompartirFileServiceImpl compartirServiceImpl;
 	
 	@GetMapping
     public List<Files> listarFiles(){
@@ -119,6 +124,28 @@ public class FileController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
     	
+    }
+    
+    @PostMapping("/compartir/{nombre}")
+    public ResponseEntity<String> compartirArchivo(@PathVariable("nombre") String nombre,
+    	    @RequestParam("destinatario") String destinatario,
+    	    @RequestParam("asunto") String asunto,
+    	    @RequestParam("mensaje") String mensaje) throws Exception{
+    	try {
+    		Files files = fileServiceImpl.fileNombre(nombre);
+    		ModeloCompartir modelo = new ModeloCompartir(destinatario, asunto, mensaje);
+    		
+    		if(files == null) {
+    			return ResponseEntity.notFound().build();
+    		}
+    		
+    		compartirServiceImpl.compartirArchivo(modelo, files);
+	        return ResponseEntity.ok("Archivo compartido");
+    				
+    	} catch (IOException e) {
+			e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
     }
     
     @PatchMapping("/{nombre}")
