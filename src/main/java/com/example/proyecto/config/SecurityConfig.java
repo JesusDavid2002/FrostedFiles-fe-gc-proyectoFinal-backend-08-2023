@@ -22,7 +22,7 @@ public class SecurityConfig {
 	
 	@Autowired
 	private AuthenticationProvider authProvider;
-	
+	    
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		return http
@@ -30,7 +30,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authRequest ->
 						authRequest
 						.requestMatchers("/auth/**").permitAll()
-						.requestMatchers("/api/**").hasAnyAuthority("USER","MODER", "ADMIN")
+						.requestMatchers("/api/**").permitAll()
 						.requestMatchers("/api/moder/**").hasAnyAuthority("MODER", "ADMIN")
 						.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
 						.anyRequest().authenticated()

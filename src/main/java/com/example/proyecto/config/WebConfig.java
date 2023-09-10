@@ -1,4 +1,4 @@
-package com.example.proyecto;
+package com.example.proyecto.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfiguration implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer{
 	
 	@Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -14,9 +14,10 @@ public class WebConfiguration implements WebMvcConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
+                		.allowedOrigins("*")
+                		.allowedHeaders("*")
                         .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
             }
         };
     }
-	
 }
