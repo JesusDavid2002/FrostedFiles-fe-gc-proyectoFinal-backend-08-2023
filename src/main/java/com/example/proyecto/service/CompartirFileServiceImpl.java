@@ -40,8 +40,6 @@ public class CompartirFileServiceImpl {
 				
 				String nombre= contenidoFile.getNombre();
 				String extension= contenidoFile.getExtension();
-				System.out.println(nombre);
-				System.out.println(extension);
 				ByteArrayResource archivoBytes = new ByteArrayResource(contenidoFile.getContenido());
 				helper.addAttachment(nombre + "." + extension, archivoBytes);
 				
