@@ -31,6 +31,7 @@ import com.example.proyecto.dto.Categories;
 import com.example.proyecto.dto.Files;
 import com.example.proyecto.dto.ModeloCompartir;
 import com.example.proyecto.dto.Subcategories;
+import com.example.proyecto.service.CategoriesServiceImpl;
 import com.example.proyecto.service.CompartirFileServiceImpl;
 import com.example.proyecto.service.FilesServiceImpl;
 
@@ -50,6 +51,9 @@ public class FileController {
 	
 	@Autowired
 	private ISubcategoriesDAO subcategory;
+
+	@Autowired
+	private CategoriesServiceImpl categoryServiceImpl;
 	
 	@Autowired
 	private CompartirFileServiceImpl compartirServiceImpl;
@@ -74,6 +78,17 @@ public class FileController {
         return fileServiceImpl.fileExtension(extension);
     }
 	
+	@GetMapping("/categories/{categories}")
+    public ResponseEntity<List<Files>> fileCategory(@PathVariable("categories") String categoriaNombre){
+		List<Files> files = categoryServiceImpl.getFilesByCategory(categoriaNombre);
+		
+		if(!files.isEmpty()) {
+			return ResponseEntity.ok(files);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+    }
+		
 //	@GetMapping("/descargar/{nombre}")
 //	public ResponseEntity<InputStreamResource> descargarFile(@PathVariable("nombre") String nombre){
 //		Files files = fileServiceImpl.fileNombre(nombre);

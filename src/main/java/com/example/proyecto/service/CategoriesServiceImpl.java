@@ -1,5 +1,6 @@
 package com.example.proyecto.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dao.ICategoriesDAO;
 import com.example.proyecto.dto.Categories;
+import com.example.proyecto.dto.Files;
 
 @Service
 public class CategoriesServiceImpl implements ICategoriesService{
@@ -33,7 +35,18 @@ public class CategoriesServiceImpl implements ICategoriesService{
 	public Categories guardarCategory(Categories category) {
 		return iCategoriesDAO.save(category);
 	}
-
+	
+	public List<Files> getFilesByCategory(String nombreCategory){
+		Categories category = iCategoriesDAO.getByNombre(nombreCategory);
+		
+		if(category != null) {
+			List<Files> files = category.getFiles();
+			return files;
+		}else {
+			return Collections.emptyList();
+		}
+	}
+	
 	@Override
 	public Categories actualizarCategory(String nombre, Categories category) {
 		Categories categoriaSelect = iCategoriesDAO.getByNombre(nombre);
