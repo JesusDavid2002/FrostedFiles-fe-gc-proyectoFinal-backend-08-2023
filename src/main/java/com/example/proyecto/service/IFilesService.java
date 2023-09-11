@@ -2,6 +2,7 @@ package com.example.proyecto.service;
 
 import java.util.List;
 
+import com.example.proyecto.dto.Categories;
 import com.example.proyecto.dto.Files;
 
 public interface IFilesService {

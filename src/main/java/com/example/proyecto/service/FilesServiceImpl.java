@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dao.IFilesDAO;
+import com.example.proyecto.dto.Categories;
 import com.example.proyecto.dto.Files;
 
 @Service
@@ -57,7 +58,6 @@ public class FilesServiceImpl implements IFilesService{
 	public void eliminarFileByNombre(String nombre) {
 		iFilesDAO.deleteByNombre(nombre);
 	}
-
 	
 
 }
