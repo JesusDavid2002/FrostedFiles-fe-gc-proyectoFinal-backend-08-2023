@@ -3,10 +3,12 @@ package com.example.proyecto.controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -84,11 +86,11 @@ public class FileController {
 //    }
 	
     @PostMapping(value="/add", consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Files> guardarFile(@RequestParam("contenido") MultipartFile file,
+    public ResponseEntity<Files> guardarFile(@RequestParam("file") MultipartFile file,
     	    @RequestParam("nombre") String nombre,
     	    @RequestParam("extension") String extension,
     	    @RequestParam("tamano") BigDecimal tamano,
-    	    @RequestParam("fechaSubida") LocalDateTime fechaSubida,
+    	    @RequestParam("fechaSubida") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaSubida,
     	    @RequestParam("visibilidad") boolean visibilidad,
     	    @RequestParam("categories") String nombreCategoria,
     		@RequestParam("subcategories") String nombreSubcategoria){
@@ -97,7 +99,7 @@ public class FileController {
 			byte[] contenido = file.getBytes();
 			Categories categories = null;
 			Subcategories subcategories = null;
-		
+	        
 			if (nombreCategoria != null && !nombreCategoria.isEmpty()) {
 	            Optional<Categories> optionalCategory = category.findByNombre(nombreCategoria);
 	            categories = optionalCategory.orElseGet(() -> new Categories(nombreCategoria));
