@@ -26,21 +26,28 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		return http
-				.csrf(csrf -> csrf.disable())
-				.authorizeHttpRequests(authRequest ->
-						authRequest
-						.requestMatchers("/auth/**").permitAll()
-						.requestMatchers("/api/**").permitAll()
-						.requestMatchers("/api/moder/**").hasAnyAuthority("MODER", "ADMIN")
-						.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-						.anyRequest().authenticated()
-						)
-				.sessionManagement(sessionManager ->
-									sessionManager
-										.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authenticationProvider(authProvider)
-				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-				.build();
+                .csrf().disable()
+//                .authorizeHttpRequests(authRequest ->
+//                        authRequest
+//                                .requestMatchers("/auth/**").permitAll()
+//                                .requestMatchers("/api/**").permitAll()
+//                                .requestMatchers("/api/moder/**").hasAnyAuthority("MODER", "ADMIN")
+//                                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+//                                .anyRequest().authenticated()
+//                )
+                .authorizeHttpRequests()
+                .requestMatchers("/auth/**").permitAll().and()
+                .authorizeHttpRequests()
+                .requestMatchers("/api/**").permitAll().and()
+                .authorizeHttpRequests()
+                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                .anyRequest().authenticated()
+                .and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
 	}
 	
 }
