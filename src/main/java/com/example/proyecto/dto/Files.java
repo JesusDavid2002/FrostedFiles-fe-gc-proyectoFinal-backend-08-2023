@@ -2,12 +2,15 @@
 
 package com.example.proyecto.dto;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.DataFormatException;
 
+import com.example.proyecto.controller.CompressUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -93,7 +96,7 @@ public class Files {
 	public List<Acciones> getAcciones() {
 		return acciones;
 	}
-
+	
 
 	/**
      * Compares the key for this instance with another Files.

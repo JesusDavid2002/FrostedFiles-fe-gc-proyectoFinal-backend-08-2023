@@ -25,7 +25,7 @@ import com.example.proyecto.service.AccionesServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/acciones")
+@RequestMapping("/api/moder/acciones")
 @RequiredArgsConstructor
 public class AccionController {
 
