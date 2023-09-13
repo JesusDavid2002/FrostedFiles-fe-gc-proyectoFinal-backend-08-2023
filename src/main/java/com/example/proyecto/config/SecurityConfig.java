@@ -40,6 +40,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/**").permitAll().and()
                 .authorizeHttpRequests()
+                .requestMatchers("/api/moder/**").hasAnyAuthority("MODER", "ADMIN").and()
+                .authorizeHttpRequests()
                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and().sessionManagement()

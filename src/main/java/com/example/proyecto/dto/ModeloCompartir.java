@@ -14,7 +14,6 @@ public class ModeloCompartir {
 	private String destinatario;
 	private String asunto;
 	private String mensaje;
-	private String nombreArchivo;
 	private Files file;
 	
 	
