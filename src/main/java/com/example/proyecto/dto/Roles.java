@@ -2,6 +2,8 @@
 
 package com.example.proyecto.dto;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +17,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -37,13 +43,6 @@ public class Roles {
     	this.nombre = rol;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String aNombre) {
-        nombre = aNombre;
-    }
     
     @JsonIgnore
 	public List<Users> getUsers() {
