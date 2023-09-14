@@ -4,6 +4,7 @@ package com.example.proyecto.dto;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -73,20 +74,22 @@ public class Users implements UserDetails{
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority((roles.getNombre())));
+	    if (roles != null) {
+	        return List.of(new SimpleGrantedAuthority(roles.getNombre()));
+	    } else {
+	        return Collections.emptyList(); 
+	    }
 	}
 
 
 	@Override
 	public String getPassword() {
-		// TODO Auto-generated method stub
 		return this.password;
 	}
 
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
 		return this.username;
 	}
 
