@@ -1,5 +1,6 @@
 package com.example.proyecto.auth;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;

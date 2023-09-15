@@ -2,6 +2,7 @@
 
 package com.example.proyecto.dto;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,6 +21,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -55,6 +57,17 @@ public class Users implements UserDetails{
     
     @Column(name="fecha_creacion")
     private LocalDateTime fechaCreacion;
+    
+    @Column(name="descripcion")
+    private String descripcion;
+    
+    @Lob
+    @Column(name="foto_perfil", columnDefinition="BLOB")
+    private byte[] fotoPerfil;
+    
+    @Lob
+    @Column(name="foto_portada", columnDefinition="BLOB")
+    private byte[] fotoPortada;
         
     @ManyToOne
     @JoinColumn(name="role")
