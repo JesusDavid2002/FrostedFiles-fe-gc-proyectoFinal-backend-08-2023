@@ -51,24 +51,35 @@ public class UserController {
     }
 	
 	@PatchMapping("/users/{email}")
-	public ResponseEntity<Users> updateUser(@PathVariable(name="email") String email, 
-			@RequestParam("nombre") String nombre,
-			@RequestParam("descripcion") String descripcion,
-			@RequestParam("fotoPerfil") MultipartFile fotoPerfil,
-			@RequestParam("fotoPortada") MultipartFile fotoPortada) throws IOException{
-	
-			Users user_seleccionado = userServiceImpl.usuarioEmail(email);	
-			byte[] foto = fotoPerfil.getBytes();
-			byte[] fotoPort = fotoPortada.getBytes();
-			
-			user_seleccionado.setNombre(nombre);
-			user_seleccionado.setDescripcion(descripcion);
-			user_seleccionado.setFotoPerfil(foto);
-			user_seleccionado.setFotoPortada(fotoPort);
-			
-			Users user_actualizado = userServiceImpl.actualizarUsuario(user_seleccionado);
-	        return ResponseEntity.ok(user_actualizado);
-    }
+	public ResponseEntity<Users> updateUser(@PathVariable(name = "email") String email,
+	        @RequestParam(name = "nombre", required = false) String nombre,
+	        @RequestParam(name = "descripcion", required = false) String descripcion,
+	        @RequestParam(name = "fotoPerfil", required = false) MultipartFile fotoPerfil,
+	        @RequestParam(name = "fotoPortada", required = false) MultipartFile fotoPortada) throws IOException {
+
+	    Users user_seleccionado = userServiceImpl.usuarioEmail(email);
+
+	    if (nombre != null) {
+	        user_seleccionado.setNombre(nombre);
+	    }
+
+	    if (descripcion != null) {
+	        user_seleccionado.setDescripcion(descripcion);
+	    }
+
+	    if (fotoPerfil != null) {
+	        byte[] foto = fotoPerfil.getBytes();
+	        user_seleccionado.setFotoPerfil(foto);
+	    }
+
+	    if (fotoPortada != null) {
+	        byte[] fotoPort = fotoPortada.getBytes();
+	        user_seleccionado.setFotoPortada(fotoPort);
+	    }
+
+	    Users user_actualizado = userServiceImpl.actualizarUsuario(user_seleccionado);
+	    return ResponseEntity.ok(user_actualizado);
+	}
     
     @DeleteMapping("/admin/users/{email}")
     public void eliminarUsuarioXEmail(@PathVariable("email") String email){
