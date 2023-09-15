@@ -1,5 +1,7 @@
 package com.example.proyecto.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +16,7 @@ public class ModeloCompartir {
 	private String destinatario;
 	private String asunto;
 	private String mensaje;
-	private Files file;
+	private MultipartFile file;
 	
 	
 }

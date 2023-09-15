@@ -5,6 +5,7 @@ package com.example.proyecto.dto;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,10 +53,10 @@ public class Files {
     private String extension;
     
     @Column(name="tamaño", precision=10, scale=2)
-    private BigDecimal tamano;
+    private long tamano;
     
     @Column(name="fecha_subida")
-    private LocalDateTime fechaSubida;
+    private Date fechaSubida;
     
     @Column(name="visibilidad")
     private boolean visibilidad;
