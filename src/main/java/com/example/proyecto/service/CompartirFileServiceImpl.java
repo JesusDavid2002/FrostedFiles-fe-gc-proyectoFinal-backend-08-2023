@@ -1,12 +1,17 @@
 package com.example.proyecto.service;
 
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.proyecto.dao.IFilesDAO;
 import com.example.proyecto.dto.Files;
@@ -31,10 +36,10 @@ public class CompartirFileServiceImpl {
 		            MimeMessage mensajes = enviarEmail.createMimeMessage();
 		            MimeMessageHelper helper = new MimeMessageHelper(mensajes, true);
 
-		            // Verificar si el modelo tiene un archivo adjunto válido
-		            if (modelo.getFile() != null) {
-		                Files contenidoFile = iFiles.findByNombre(modelo.getFile().getNombre());
-
+		            if (modelo.getFile() != null && !modelo.getFile().isEmpty()) {
+//		                Files contenidoFile = iFiles.findByNombre(modelo.getFile().getNombre());
+		            	Files contenidoFile = convertidorAFiles(modelo.getFile());
+		            	
 		                if (contenidoFile != null) {
 		                    helper.setFrom(new InternetAddress(user.getUsername()));
 		                    helper.setTo(modelo.getDestinatario());
@@ -60,6 +65,23 @@ public class CompartirFileServiceImpl {
 		        throw new Exception("Usuario no autenticado");
 		    }
 		
+	}
+
+	private Files convertidorAFiles(MultipartFile file) throws IOException{
+		Files files = new Files();
+		String nombre = file.getOriginalFilename();
+		int separacion = nombre.lastIndexOf('.');
+		
+		files.setNombre(file.getOriginalFilename());
+		if(separacion > 0) {
+			String extension = nombre.substring(separacion + 1);
+			files.setExtension(extension);
+		}
+		
+		files.setTamano(file.getSize());
+		//files.setFechaSubida(new LocalDateTime("2023-09-06","14:30:00"));
+		files.setContenido(file.getBytes());
+		return files;
 	}
 
 }

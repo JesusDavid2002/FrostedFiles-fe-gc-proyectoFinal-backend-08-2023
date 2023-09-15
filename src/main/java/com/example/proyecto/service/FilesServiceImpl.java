@@ -25,6 +25,7 @@ public class FilesServiceImpl implements IFilesService{
 	public Files fileID(int codigo) {
 		return iFilesDAO.findById(codigo).get();
 	}
+	
 	@Override
 	public Files fileNombre(String nombre) {
 		return iFilesDAO.findByNombre(nombre);

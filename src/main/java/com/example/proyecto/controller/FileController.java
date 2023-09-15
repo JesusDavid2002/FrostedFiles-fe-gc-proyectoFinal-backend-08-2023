@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.zip.Deflater;
@@ -77,7 +78,7 @@ public class FileController {
 	private CategoriesServiceImpl categoryServiceImpl;
 	
 	@Autowired
-	private CompartirFileServiceImpl compartirServiceImpl;
+	private CompartirFileServiceImpl compartirServiceImpl; 
 
 	@GetMapping
     public List<Files> listarFiles(){
@@ -125,7 +126,7 @@ public class FileController {
     public ResponseEntity<Files> guardarFile(@RequestParam("file") MultipartFile file,
     	    @RequestParam("nombre") String nombre,
     	    @RequestParam("extension") String extension,
-    	    @RequestParam("tamano") BigDecimal tamano,
+    	    @RequestParam("tamano") long tamano,
     	    @RequestParam("fechaSubida") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaSubida,
     	    @RequestParam("visibilidad") boolean visibilidad,
     	    @RequestParam("categories") String nombreCategoria,
@@ -163,7 +164,7 @@ public class FileController {
 	    	newFile.setExtension(extension);
 	    	newFile.setFechaSubida(fechaSubida);
 	    	newFile.setVisibilidad(visibilidad);
-	    	newFile.setContenido(contenidoComprimido);
+	    	newFile.setContenido(contenido);
 	    	newFile.setCategories(categories);
 	    	newFile.setSubcategories(subcategories);
 	        return ResponseEntity.ok(fileServiceImpl.guardarFile(newFile));
@@ -178,6 +179,7 @@ public class FileController {
     @GetMapping("/pdf/{nombre}")
     public ResponseEntity<byte[]> getPdfByName(@PathVariable("nombre") String nombre) {
         Files pdfEntity = fileServiceImpl.fileNombre(nombre); 
+
         if (pdfEntity != null) {
             byte[] pdfBytes = pdfEntity.getContenido(); 
 
@@ -192,10 +194,16 @@ public class FileController {
         }
     }
     
-	@PostMapping("/compartir")
-    public ResponseEntity<String> compartirArchivo(@RequestBody ModeloCompartir request, @AuthenticationPrincipal UserDetails user) throws Exception{
+	@PostMapping(value="/compartir", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> compartirArchivo(@RequestParam("archivo") MultipartFile file,
+            @RequestParam("destinatario") String destinatario,
+            @RequestParam("asunto") String asunto,
+            @RequestParam("mensaje") String mensaje,
+            @AuthenticationPrincipal UserDetails user) throws Exception{
     	try {
-		compartirServiceImpl.compartirArchivo(request, user);
+    		ModeloCompartir request = new ModeloCompartir(destinatario,asunto,mensaje,file);
+    		
+    		compartirServiceImpl.compartirArchivo(request, user);
 		
         return ResponseEntity.ok("Archivo compartido");
 				
@@ -203,10 +211,9 @@ public class FileController {
 			e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-    	
     }
-    
-    @PatchMapping("/{nombre}")
+
+	@PatchMapping("/{nombre}")
     public ResponseEntity<Files> actualizarFile(@PathVariable("nombre") String nombre, @RequestBody Files file){
         return ResponseEntity.ok(fileServiceImpl.actualizarFile(nombre, file));
     }
