@@ -56,7 +56,7 @@ public class Files {
     private long tamano;
     
     @Column(name="fecha_subida")
-    private Date fechaSubida;
+    private LocalDateTime fechaSubida;
     
     @Column(name="visibilidad")
     private boolean visibilidad;

@@ -2,6 +2,7 @@ package com.example.proyecto.service;
 
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,7 @@ public class CompartirFileServiceImpl {
 		}
 		
 		files.setTamano(file.getSize());
-		files.setFechaSubida(new Date());
+		//files.setFechaSubida(new LocalDateTime("2023-09-06","14:30:00"));
 		files.setContenido(file.getBytes());
 		return files;
 	}
