@@ -45,23 +45,29 @@ public class SubcategoryController {
     @PostMapping("/add")
     @Transactional
     public ResponseEntity<Subcategories> guardarSubcategory(@RequestBody Subcategories subcategory){
-    	String categoryName = subcategory.getCategories().getNombre();
-    	Categories category = categoriesServiceImpl.categoryNombre(categoryName);
-    	
-    	if(category == null) {
-    		Categories newCategory = new Categories();
-    		newCategory.setNombre(categoryName);
-    		categoriesServiceImpl.guardarCategory(newCategory);
+        if(subcategory == null || subcategory.getCategory() == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        
+        String categoryName = subcategory.getCategory().getNombre();
+        Categories category = categoriesServiceImpl.categoryNombre(categoryName);
+        
+        if(category == null) {
+            Categories newCategory = new Categories();
+            newCategory.setNombre(categoryName);
+            categoriesServiceImpl.guardarCategory(newCategory);
             category = categoriesServiceImpl.categoryNombre(categoryName);
-    	}
-    	subcategory.setCategories(category);
+        }
+
+        subcategory.setCategory(category);
         return ResponseEntity.ok(subcategoriesServiceImpl.guardarSubcategory(subcategory));
     }
+
     
-    @PutMapping("/{nombre}")
-    public ResponseEntity<Subcategories> actualizarSubcategory(@PathVariable("nombre") String nombre, @RequestBody Subcategories subcategory){
-    	return ResponseEntity.ok(subcategoriesServiceImpl.actualizarSubcategory(nombre, subcategory));
-    }
+    @GetMapping("/{nombre}")
+	public List<Subcategories> subcategoryName(@PathVariable("nombre") String nombre) {
+	    return subcategoriesServiceImpl.findByCategory_Nombre(nombre);
+	}
         
     @DeleteMapping("/{nombre}")
     @Transactional

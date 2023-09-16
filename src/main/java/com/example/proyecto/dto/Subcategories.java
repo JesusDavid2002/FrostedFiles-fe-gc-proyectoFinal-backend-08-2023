@@ -44,7 +44,7 @@ public class Subcategories{
     
     @ManyToOne
     @JoinColumn(name="category_nombre", referencedColumnName="nombre")
-    private Categories categories;
+    private Categories category;
     
     @OneToMany(mappedBy="subcategories", fetch = FetchType.LAZY)
     private List<Files> files;

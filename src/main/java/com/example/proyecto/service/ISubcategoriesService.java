@@ -25,5 +25,7 @@ public interface ISubcategoriesService {
 	
 	// Elimina la subcategoria
 	public void eliminarSubcategoryXNombre(String nombre);
+	
+	List<Subcategories> findByCategory_Nombre(String nombre);
 
 }
