@@ -27,17 +27,17 @@ public class UserController {
 	
 	@Autowired
 	private UserServiceImpl userServiceImpl;
-    private final RolesServiceImpl rolesService;
+    	private final RolesServiceImpl rolesService;
 	
 	@GetMapping("/admin/users")
-    public List<Users> getAllUsers(){
-        return userServiceImpl.listarUsuarios();
-    }
+   	public List<Users> getAllUsers(){
+		return userServiceImpl.listarUsuarios();
+    	}
 	
 	@GetMapping("/admin/users/{email}")
-    public Users getByUsername(@PathVariable("email") String email){
-        return userServiceImpl.usuarioEmail(email);
-    }
+    	public Users getByUsername(@PathVariable("email") String email){
+        	return userServiceImpl.usuarioEmail(email);
+    	}
     
 	@PatchMapping("/admin/users/{email}")
 	public ResponseEntity<Users> updateAdmin(@PathVariable(name = "email") String email, @RequestBody Users user) {
