@@ -19,6 +19,12 @@ public class RolesServiceImpl implements IRolesService{
     	}
 
 	@Override
+	public List<Roles> listarRoles() {
+		// TODO Auto-generated method stub
+		return iRolesDAO.findAll();
+	}
+
+	@Override
 	public Roles rolNombre(String nombre) {
 		// TODO Auto-generated method stub
 		return iRolesDAO.findByNombre(nombre);
