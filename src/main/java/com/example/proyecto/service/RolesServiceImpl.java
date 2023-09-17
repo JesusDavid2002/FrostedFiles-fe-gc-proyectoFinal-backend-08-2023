@@ -11,9 +11,13 @@ import com.example.proyecto.dto.Roles;
 @Service
 public class RolesServiceImpl implements IRolesService{
 
-	@Autowired
-	private IRolesDAO iRolesDAO;
-	
+	private final IRolesDAO iRolesDAO;
+
+    	@Autowired
+    	public RolesServiceImpl(IRolesDAO iRolesDAO) {
+        	this.iRolesDAO = iRolesDAO;
+    	}
+
 	@Override
 	public List<Roles> listarRoles() {
 		// TODO Auto-generated method stub
