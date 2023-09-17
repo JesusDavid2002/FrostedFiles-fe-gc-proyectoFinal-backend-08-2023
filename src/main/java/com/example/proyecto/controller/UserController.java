@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.proyecto.dto.Roles;
 import com.example.proyecto.dto.Users;
+import com.example.proyecto.service.RolesServiceImpl;
 import com.example.proyecto.service.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -27,27 +29,31 @@ public class UserController {
 	
 	@Autowired
 	private UserServiceImpl userServiceImpl;
+    private final RolesServiceImpl rolesService;
 	
 	@GetMapping("/admin/users")
-   	public List<Users> getAllUsers(){
-		return userServiceImpl.listarUsuarios();
-    	}
+    public List<Users> getAllUsers(){
+        return userServiceImpl.listarUsuarios();
+    }
 	
 	@GetMapping("/admin/users/{email}")
-    	public Users getByUsername(@PathVariable("email") String email){
-        	return userServiceImpl.usuarioEmail(email);
-    	}
+    public Users getByUsername(@PathVariable("email") String email){
+        return userServiceImpl.usuarioEmail(email);
+    }
     
 	@PatchMapping("/admin/users/{email}")
 	public ResponseEntity<Users> updateAdmin(@PathVariable(name = "email") String email, @RequestBody Users user) {
 	    
 	    Users user_seleccionado = userServiceImpl.usuarioEmail(email);
-	    	    
-	    user_seleccionado.setRoles(user.getRoles());
+	    
+	    Roles existingRole = rolesService.rolNombre(user.getRoles().getNombre());
+	    
+	    user_seleccionado.setRoles(existingRole);
 	    
 	    Users user_actualizado = userServiceImpl.actualizarUsuario(user_seleccionado);
 	    return ResponseEntity.ok(user_actualizado);
 	}
+
 	
 	@PatchMapping("/users/{email}")
 	public ResponseEntity<Users> updateUser(@PathVariable(name = "email") String email,
@@ -79,6 +85,7 @@ public class UserController {
 	    Users user_actualizado = userServiceImpl.actualizarUsuario(user_seleccionado);
 	    return ResponseEntity.ok(user_actualizado);
 	}
+
     
     @DeleteMapping("/admin/users/{email}")
     public void eliminarUsuarioXEmail(@PathVariable("email") String email){
