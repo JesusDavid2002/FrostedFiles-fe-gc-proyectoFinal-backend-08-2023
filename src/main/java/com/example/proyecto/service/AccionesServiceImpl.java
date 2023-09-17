@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dao.IAccionesDAO;
 import com.example.proyecto.dto.Acciones;
+import com.example.proyecto.dto.Files;
 
 @Service
 public class AccionesServiceImpl implements IAccionesService{
@@ -65,10 +66,42 @@ public class AccionesServiceImpl implements IAccionesService{
 		}
 		return estadisticaMensual;
 	}
+	
+	public Map<String, Map<String, Integer>> obtenerEstadisiticasAnuales(List<Acciones> acciones) {
+		Map<String, Map<String, Integer>> estadisticaAnuales = new HashMap<>();
+		
+		for(Acciones accion : acciones) {
+			LocalDateTime fecha = accion.getFecha();
+			String anyo = obtenerAno(fecha);
+			String mes = obtenerMes(fecha);
+			String tipo = accion.getTipoAccion();
+			
+			if(anyo.equals(obtenerAnoActual())) {
+				estadisticaAnuales.putIfAbsent(mes, new HashMap<>());
+				Map<String, Integer> estadisiticaTipo = estadisticaAnuales.get(mes);
+				estadisiticaTipo.put(tipo, estadisiticaTipo.getOrDefault(tipo, 0) + 1);
+			}
+		}
+		return estadisticaAnuales;
+	}
 
+	public Acciones guardarAccion(String tipo, LocalDateTime fechaSubida, Files file) {
+		Acciones accion = new Acciones(tipo, fechaSubida, file);
+		return iAccionesDAO.save(accion);
+	}	
+	
 	private String obtenerMes(LocalDateTime fecha) {
 		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("MMMM");
 		return fecha.format(formatoFecha);
 	}
 
+	private String obtenerAno(LocalDateTime fecha) {
+		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("yyyy");
+		return fecha.format(formatoFecha);
+	}
+	
+	private Object obtenerAnoActual() {
+		LocalDateTime fechaActual = LocalDateTime.now();
+		return fechaActual;
+	}
 }

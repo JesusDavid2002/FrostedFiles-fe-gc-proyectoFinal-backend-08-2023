@@ -50,6 +50,12 @@ public class Acciones {
     @JoinColumn(name="files_name", referencedColumnName="nombre")
     private Files files;
     
+
+	public Acciones(String tipoAccion, LocalDateTime fecha, Files files) {
+		this.tipoAccion = tipoAccion;
+		this.fecha = fecha;
+		this.files = files;
+	}
     
 	/**
      * Compares the key for this instance with another Acciones.

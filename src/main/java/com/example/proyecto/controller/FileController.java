@@ -1,33 +1,11 @@
 package com.example.proyecto.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.http.HttpHeaders;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.zip.Deflater;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.InflaterInputStream;
 
-import javax.imageio.ImageIO;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,7 +14,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,11 +25,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.proyecto.dao.ICategoriesDAO;
 import com.example.proyecto.dao.ISubcategoriesDAO;
-import com.example.proyecto.dto.ByteArrayCompressor;
 import com.example.proyecto.dto.Categories;
 import com.example.proyecto.dto.Files;
 import com.example.proyecto.dto.ModeloCompartir;
 import com.example.proyecto.dto.Subcategories;
+import com.example.proyecto.service.AccionesServiceImpl;
 import com.example.proyecto.service.CategoriesServiceImpl;
 import com.example.proyecto.service.CompartirFileServiceImpl;
 import com.example.proyecto.service.FilesServiceImpl;
@@ -80,6 +57,9 @@ public class FileController {
 	@Autowired
 	private CompartirFileServiceImpl compartirServiceImpl; 
 
+	@Autowired
+	private AccionesServiceImpl accionesServiceImpl; 
+
 	@GetMapping
     public List<Files> listarFiles(){
         return fileServiceImpl.listarFiles();
@@ -92,12 +72,18 @@ public class FileController {
 		
 	@GetMapping("/nombre/{nombre}")
     public Files fileNombre(@PathVariable("nombre") String nombre){
-        return fileServiceImpl.fileNombre(nombre);
+		Files verFile = fileServiceImpl.fileNombre(nombre);
+    	accionesServiceImpl.guardarAccion("visualizar", verFile.getFechaSubida(), verFile);
+    	
+        return verFile;
     }
 	
 	@GetMapping("/extension/{extension}")
     public Files fileExtension(@PathVariable("extension") String extension){
-        return fileServiceImpl.fileExtension(extension);
+		Files verFile = fileServiceImpl.fileExtension(extension);
+    	accionesServiceImpl.guardarAccion("visualizar", verFile.getFechaSubida(), verFile);
+    	
+        return verFile;
     }
 	
 	@GetMapping("/categories/{categories}")
@@ -110,17 +96,6 @@ public class FileController {
 			return ResponseEntity.notFound().build();
 		}
     }
-		
-//	@GetMapping("/descargar/{nombre}")
-//	public ResponseEntity<InputStreamResource> descargarFile(@PathVariable("nombre") String nombre){
-//		Files files = fileServiceImpl.fileNombre(nombre);
-//		
-//		InputStreamResource dato = new InputStreamResource(files.getInputStream());
-//		
-//		return ResponseEntity.ok()
-//				.header("Content", "; Nombre del fichero = " +files.getNombre())
-//				.contentType(MediaType.parseMediaType(files.getC))
-//    }
 	
     @PostMapping(value="/add", consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Files> guardarFile(@RequestParam("file") MultipartFile file,
@@ -134,7 +109,6 @@ public class FileController {
     	
 		try {
 			byte[] contenido = file.getBytes();		
-	        byte[] contenidoComprimido = ByteArrayCompressor.compressByteArray(contenido);
 	        
 			Categories categories = null;
 			Subcategories subcategories = null;
@@ -167,7 +141,11 @@ public class FileController {
 	    	newFile.setContenido(contenido);
 	    	newFile.setCategories(categories);
 	    	newFile.setSubcategories(subcategories);
-	        return ResponseEntity.ok(fileServiceImpl.guardarFile(newFile));
+	    	
+	    	newFile = fileServiceImpl.guardarFile(newFile);
+	    	accionesServiceImpl.guardarAccion("subir", fechaSubida, newFile);
+	    	
+	        return ResponseEntity.ok(newFile);
 	        
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -204,7 +182,8 @@ public class FileController {
     		ModeloCompartir request = new ModeloCompartir(destinatario,asunto,mensaje,file);
     		
     		compartirServiceImpl.compartirArchivo(request, user);
-		
+
+	    	accionesServiceImpl.guardarAccion("subir", LocalDateTime.now(), (Files) file);
         return ResponseEntity.ok("Archivo compartido");
 				
     	} catch (IOException e) {

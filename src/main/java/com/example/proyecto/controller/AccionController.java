@@ -22,10 +22,11 @@ import com.example.proyecto.dto.Files;
 import com.example.proyecto.dto.Users;
 import com.example.proyecto.service.AccionesServiceImpl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/moder/acciones")
+@RequestMapping("/api/acciones")
 @RequiredArgsConstructor
 public class AccionController {
 
@@ -48,7 +49,7 @@ public class AccionController {
         return accionesServiceImpl.accionID(codigo);
     }
 	
-	@GetMapping("/estadisticas")
+	@GetMapping("/estadisticasMensuales")
     public ResponseEntity<Map<String, Map<String, Integer>>> obtenerEstadisiticasMensuales(){
 		List<Acciones> acciones = accionesServiceImpl.listarAcciones();
 
@@ -57,23 +58,32 @@ public class AccionController {
         return ResponseEntity.ok(estadisticas);
     }
 	
+	@GetMapping("/estadisticasAnuales")
+    public ResponseEntity<Map<String, Map<String, Integer>>> obtenerEstadisiticasAnuales(){
+		List<Acciones> acciones = accionesServiceImpl.listarAcciones();
+
+		Map<String, Map<String, Integer>> estadisticas = accionesServiceImpl.obtenerEstadisiticasAnuales(acciones);
+		
+        return ResponseEntity.ok(estadisticas);
+    }
     
 
 	@PostMapping("/add")
     public ResponseEntity<Acciones> guardarAccion(@RequestBody Acciones accion){
-    	String nombreUsuario = accion.getUsers().getUsername();
-        Optional<Users> optionalUser  = iUsers.findByUsername(nombreUsuario);
-        
-        if (optionalUser.isPresent()) {
-            Users users = optionalUser.get(); 
-
+    	
             String nombreArchivo = accion.getFiles().getNombre();
             Files files = iFiles.findByNombre(nombreArchivo);
-
-            accion.setUsers(users);
+            
+            if (files == null) {
+                throw new EntityNotFoundException("El archivo con nombre " + nombreArchivo + " no existe.");
+            }
+            
             accion.setFiles(files);   
-        }
-        return ResponseEntity.ok(accionesServiceImpl.guardarAccion(accion));
+
+            Acciones accionGuardada = accionesServiceImpl.guardarAccion(accion);
+            return ResponseEntity.ok(accionGuardada);
+         
+        
     }
     
     @PutMapping("/update")

@@ -98,7 +98,7 @@ public class Files {
 		return acciones;
 	}
 	
-
+	
 	/**
      * Compares the key for this instance with another Files.
      *
@@ -168,5 +168,9 @@ public class Files {
         ret.put("id", Integer.valueOf(getId()));
         return ret;
     }
+
+	public Files(String nombre) {
+		this.nombre = nombre;
+	}
 
 }
