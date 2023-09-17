@@ -1,5 +1,6 @@
 package com.example.proyecto.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ public interface ISubcategoriesDAO extends JpaRepository<Subcategories, Integer>
 	void deleteByNombre(String nombre);
 
 	Optional<Subcategories> findByNombre(String nombre);
+	
+    List<Subcategories> findByCategory_Nombre(String categoryNombre);
 
 }

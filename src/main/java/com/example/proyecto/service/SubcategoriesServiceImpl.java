@@ -20,9 +20,9 @@ public class SubcategoriesServiceImpl implements ISubcategoriesService{
 	}
 
 	@Override
-	public Subcategories subcategoryID(int codigo) {
-		return iSubcategoriesDAO.findById(codigo).get();
-	}
+    public List<Subcategories> findByCategory_Nombre(String nombre) {
+        return iSubcategoriesDAO.findByCategory_Nombre(nombre);
+    }
 	
 	@Override
 	public Subcategories subcategoryNombre(String nombre) {
@@ -49,6 +49,12 @@ public class SubcategoriesServiceImpl implements ISubcategoriesService{
 	@Override
 	public void eliminarSubcategoryXNombre(String nombre) {
 		iSubcategoriesDAO.deleteByNombre(nombre);
+	}
+
+	@Override
+	public Subcategories subcategoryID(int codigo) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
