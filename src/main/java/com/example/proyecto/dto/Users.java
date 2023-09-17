@@ -35,6 +35,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIgnoreProperties(value = {"authorities"})
 @Table(name="users")
 public class Users implements UserDetails{
 
@@ -69,8 +70,8 @@ public class Users implements UserDetails{
     @Column(name="foto_portada", columnDefinition="BLOB")
     private byte[] fotoPortada;
         
-    @ManyToOne
-    @JoinColumn(name="role")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "role")
     private Roles roles;
 
     @OneToMany(mappedBy="users",fetch = FetchType.LAZY)
