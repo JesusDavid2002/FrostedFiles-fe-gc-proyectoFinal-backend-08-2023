@@ -35,9 +35,6 @@ public class AccionController {
 
 	@Autowired
 	private IFilesDAO iFiles;
-
-	@Autowired
-	private UserRepository iUsers;
 	
 	@GetMapping
     public List<Acciones> listarAcciones(){

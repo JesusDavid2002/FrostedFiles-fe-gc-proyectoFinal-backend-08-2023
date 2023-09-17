@@ -20,6 +20,10 @@ import com.example.proyecto.dto.ModeloCompartir;
 
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.NonUniqueResultException;
+import jakarta.persistence.TypedQuery;
 
 @Service
 public class CompartirFileServiceImpl {
@@ -31,8 +35,8 @@ public class CompartirFileServiceImpl {
 	private AccionesServiceImpl accionesServiceImpl; 
 	
 	@Autowired
-	private FilesServiceImpl fileServiceImpl; 
-			
+	private FilesServiceImpl filesServiceImpl; 
+
 	public void compartirArchivo(ModeloCompartir modelo) throws Exception {
 		
         try {
@@ -43,26 +47,18 @@ public class CompartirFileServiceImpl {
             	Files contenidoFile = convertidorAFiles(modelo.getFile());
             	
                 if (contenidoFile != null) {
-                    helper.setTo(modelo.getDestinatario());
-                    helper.setSubject(modelo.getAsunto());
-                    helper.setText(modelo.getMensaje());
 
                     String nombre = contenidoFile.getNombre();
                     String extension = contenidoFile.getExtension();
+                                        
+                    helper.setTo(modelo.getDestinatario());
+                    helper.setSubject(modelo.getAsunto());
+                    helper.setText(modelo.getMensaje());
+                    
                     ByteArrayResource archivoBytes = new ByteArrayResource(contenidoFile.getContenido());
                     helper.addAttachment(nombre + "." + extension, archivoBytes);
                     
-                    Files file = new Files();
-                    file.setNombre(nombre);
-                    file.setExtension(extension);
-                    file.setTamano(contenidoFile.getTamano());
-                    file.setFechaSubida(contenidoFile.getFechaSubida());
-                    file.setVisibilidad(contenidoFile.isVisibilidad());
-                    file.setContenido(contenidoFile.getContenido());
-                    file.setCategories(contenidoFile.getCategories());
-                    file.setSubcategories(contenidoFile.getSubcategories());
-
-        	    	file = fileServiceImpl.guardarFile(file);
+                    Files file = filesServiceImpl.fileNombre(nombre);
                     Acciones accion = new Acciones("compartir", LocalDateTime.now(), file);
                 	accionesServiceImpl.guardarAccion(accion);
                 	
@@ -84,12 +80,14 @@ public class CompartirFileServiceImpl {
 		Files files = new Files();
 		String nombre = file.getOriginalFilename();
 		int separacion = nombre.lastIndexOf('.');
-		
 		files.setNombre(file.getOriginalFilename());
-		if(separacion > 0) {
-			String extension = nombre.substring(separacion + 1);
-			files.setExtension(extension);
-		}
+
+		String[] partes = nombre.split("\\.");
+
+		if (separacion >= 3) {
+		    String extension = partes[2];
+		    files.setExtension(extension);
+		} 
 		
 		files.setTamano(file.getSize());
 		//files.setFechaSubida(new LocalDateTime("2023-09-06","14:30:00"));
