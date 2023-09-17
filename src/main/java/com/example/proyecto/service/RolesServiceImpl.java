@@ -11,12 +11,8 @@ import com.example.proyecto.dto.Roles;
 @Service
 public class RolesServiceImpl implements IRolesService{
 
-	private final IRolesDAO iRolesDAO;
-
-    	@Autowired
-    	public RolesServiceImpl(IRolesDAO iRolesDAO) {
-        	this.iRolesDAO = iRolesDAO;
-    	}
+	@Autowired
+	IRolesDAO iRolesDAO;
 
 	@Override
 	public List<Roles> listarRoles() {

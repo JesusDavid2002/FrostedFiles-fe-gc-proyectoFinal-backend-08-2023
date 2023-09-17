@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,14 +50,14 @@ public class Acciones {
     @ManyToOne
     @JoinColumn(name="files_name", referencedColumnName="nombre")
     private Files files;
-    
 
+    
 	public Acciones(String tipoAccion, LocalDateTime fecha, Files files) {
 		this.tipoAccion = tipoAccion;
 		this.fecha = fecha;
 		this.files = files;
 	}
-    
+
 	/**
      * Compares the key for this instance with another Acciones.
      *
@@ -126,7 +127,5 @@ public class Acciones {
         ret.put("id", Integer.valueOf(getId()));
         return ret;
     }
-
-
 
 }

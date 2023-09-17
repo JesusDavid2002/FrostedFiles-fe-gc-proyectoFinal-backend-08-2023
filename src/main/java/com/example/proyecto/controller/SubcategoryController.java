@@ -37,7 +37,7 @@ public class SubcategoryController {
         return subcategoriesServiceImpl.listarSubcategories();
     }
 	
-	@GetMapping("/{id}")
+	@GetMapping("/id/{id}")
     public Subcategories subcategoryID(@PathVariable("id") int codigo){
         return subcategoriesServiceImpl.subcategoryID(codigo);
     }

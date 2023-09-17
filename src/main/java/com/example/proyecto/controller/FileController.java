@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.proyecto.dao.ICategoriesDAO;
 import com.example.proyecto.dao.ISubcategoriesDAO;
+import com.example.proyecto.dto.Acciones;
 import com.example.proyecto.dto.Categories;
 import com.example.proyecto.dto.Files;
 import com.example.proyecto.dto.ModeloCompartir;
@@ -33,6 +34,7 @@ import com.example.proyecto.service.AccionesServiceImpl;
 import com.example.proyecto.service.CategoriesServiceImpl;
 import com.example.proyecto.service.CompartirFileServiceImpl;
 import com.example.proyecto.service.FilesServiceImpl;
+import com.example.proyecto.service.SubcategoriesServiceImpl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +55,9 @@ public class FileController {
 
 	@Autowired
 	private CategoriesServiceImpl categoryServiceImpl;
+	
+	@Autowired
+	private SubcategoriesServiceImpl subcategoryServiceImpl;
 	
 	@Autowired
 	private CompartirFileServiceImpl compartirServiceImpl; 
@@ -80,15 +85,23 @@ public class FileController {
 	
 	@GetMapping("/extension/{extension}")
     public Files fileExtension(@PathVariable("extension") String extension){
-		Files verFile = fileServiceImpl.fileExtension(extension);
-    	accionesServiceImpl.guardarAccion("visualizar", verFile.getFechaSubida(), verFile);
-    	
-        return verFile;
+		return  fileServiceImpl.fileExtension(extension);      
     }
 	
 	@GetMapping("/categories/{categories}")
     public ResponseEntity<List<Files>> fileCategory(@PathVariable("categories") String categoriaNombre){
 		List<Files> files = categoryServiceImpl.getFilesByCategory(categoriaNombre);
+		
+		if(!files.isEmpty()) {
+			return ResponseEntity.ok(files);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+    }
+	
+	@GetMapping("/subcategories/{subcategories}")
+    public ResponseEntity<List<Files>> fileSubcategory(@PathVariable("subcategories") String subcategoriaNombre){
+		List<Files> files = subcategoryServiceImpl.getFilesBySubcategory(subcategoriaNombre);
 		
 		if(!files.isEmpty()) {
 			return ResponseEntity.ok(files);
@@ -181,9 +194,8 @@ public class FileController {
     	try {
     		ModeloCompartir request = new ModeloCompartir(destinatario,asunto,mensaje,file);
     		
-    		compartirServiceImpl.compartirArchivo(request, user);
-
-	    	accionesServiceImpl.guardarAccion("subir", LocalDateTime.now(), (Files) file);
+    		compartirServiceImpl.compartirArchivo(request);
+        	
         return ResponseEntity.ok("Archivo compartido");
 				
     	} catch (IOException e) {

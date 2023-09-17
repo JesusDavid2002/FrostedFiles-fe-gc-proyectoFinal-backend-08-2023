@@ -1,5 +1,6 @@
 package com.example.proyecto.service;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.proyecto.dao.IAccionesDAO;
 import com.example.proyecto.dto.Acciones;
@@ -104,4 +106,5 @@ public class AccionesServiceImpl implements IAccionesService{
 		LocalDateTime fechaActual = LocalDateTime.now();
 		return fechaActual;
 	}
+
 }

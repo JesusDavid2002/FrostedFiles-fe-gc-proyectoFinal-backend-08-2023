@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.proyecto.dao.IFilesDAO;
+import com.example.proyecto.dto.Acciones;
 import com.example.proyecto.dto.Files;
 import com.example.proyecto.dto.ModeloCompartir;
 
@@ -27,44 +28,56 @@ public class CompartirFileServiceImpl {
 	private JavaMailSender enviarEmail;
 	
 	@Autowired
-	private IFilesDAO iFiles;
+	private AccionesServiceImpl accionesServiceImpl; 
+	
+	@Autowired
+	private FilesServiceImpl fileServiceImpl; 
+			
+	public void compartirArchivo(ModeloCompartir modelo) throws Exception {
 		
-	public void compartirArchivo(ModeloCompartir modelo, UserDetails user) throws Exception {
-		
-		 if (user != null) {
-		        try {
-		            MimeMessage mensajes = enviarEmail.createMimeMessage();
-		            MimeMessageHelper helper = new MimeMessageHelper(mensajes, true);
+        try {
+            MimeMessage mensajes = enviarEmail.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mensajes, true);
 
-		            if (modelo.getFile() != null && !modelo.getFile().isEmpty()) {
-//		                Files contenidoFile = iFiles.findByNombre(modelo.getFile().getNombre());
-		            	Files contenidoFile = convertidorAFiles(modelo.getFile());
-		            	
-		                if (contenidoFile != null) {
-		                    helper.setFrom(new InternetAddress(user.getUsername()));
-		                    helper.setTo(modelo.getDestinatario());
-		                    helper.setSubject(modelo.getAsunto());
-		                    helper.setText(modelo.getMensaje());
+            if (modelo.getFile() != null && !modelo.getFile().isEmpty()) {
+            	Files contenidoFile = convertidorAFiles(modelo.getFile());
+            	
+                if (contenidoFile != null) {
+                    helper.setTo(modelo.getDestinatario());
+                    helper.setSubject(modelo.getAsunto());
+                    helper.setText(modelo.getMensaje());
 
-		                    String nombre = contenidoFile.getNombre();
-		                    String extension = contenidoFile.getExtension();
-		                    ByteArrayResource archivoBytes = new ByteArrayResource(contenidoFile.getContenido());
-		                    helper.addAttachment(nombre + "." + extension, archivoBytes);
-		                } else {
-		                    throw new Exception("Archivo no encontrado");
-		                }
-		            } else {
-		                throw new Exception("El modelo no contiene un archivo adjunto válido");
-		            }
+                    String nombre = contenidoFile.getNombre();
+                    String extension = contenidoFile.getExtension();
+                    ByteArrayResource archivoBytes = new ByteArrayResource(contenidoFile.getContenido());
+                    helper.addAttachment(nombre + "." + extension, archivoBytes);
+                    
+                    Files file = new Files();
+                    file.setNombre(nombre);
+                    file.setExtension(extension);
+                    file.setTamano(contenidoFile.getTamano());
+                    file.setFechaSubida(contenidoFile.getFechaSubida());
+                    file.setVisibilidad(contenidoFile.isVisibilidad());
+                    file.setContenido(contenidoFile.getContenido());
+                    file.setCategories(contenidoFile.getCategories());
+                    file.setSubcategories(contenidoFile.getSubcategories());
 
-		            enviarEmail.send(mensajes);
-		        } catch (Exception e) {
-		            throw new Exception("Error al compartir archivo", e);
-		        }
-		    } else {
-		        throw new Exception("Usuario no autenticado");
-		    }
-		
+        	    	file = fileServiceImpl.guardarFile(file);
+                    Acciones accion = new Acciones("compartir", LocalDateTime.now(), file);
+                	accionesServiceImpl.guardarAccion(accion);
+                	
+                } else {
+                    throw new Exception("Archivo no encontrado");
+                }
+                
+            } else {
+                throw new Exception("El modelo no contiene un archivo adjunto válido");
+            }
+
+            enviarEmail.send(mensajes);
+        } catch (Exception e) {
+            throw new Exception("Error al compartir archivo", e);
+        }
 	}
 
 	private Files convertidorAFiles(MultipartFile file) throws IOException{

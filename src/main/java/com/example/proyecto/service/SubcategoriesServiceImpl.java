@@ -1,11 +1,14 @@
 package com.example.proyecto.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.proyecto.dao.ISubcategoriesDAO;
+import com.example.proyecto.dto.Categories;
+import com.example.proyecto.dto.Files;
 import com.example.proyecto.dto.Subcategories;
 
 @Service
@@ -32,7 +35,18 @@ public class SubcategoriesServiceImpl implements ISubcategoriesService{
 	public Subcategories guardarSubcategory(Subcategories subcategory) {
 		return iSubcategoriesDAO.save(subcategory);
 	}
-
+	
+	public List<Files> getFilesBySubcategory(String nombreSubcategory){
+		Subcategories subcategory = iSubcategoriesDAO.getByNombre(nombreSubcategory);
+		
+		if(subcategory != null) {
+			List<Files> files = subcategory.getFiles();
+			return files;
+		}else {
+			return Collections.emptyList();
+		}
+	}
+	
 	@Override
 	public Subcategories actualizarSubcategory(String nombre, Subcategories subcategory) {
 		Subcategories subcategorySelect = iSubcategoriesDAO.getByNombre(nombre);
