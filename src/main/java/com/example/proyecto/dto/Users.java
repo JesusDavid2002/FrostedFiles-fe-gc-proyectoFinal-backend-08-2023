@@ -79,8 +79,8 @@ public class Users implements UserDetails{
     @OneToMany(mappedBy="users",fetch = FetchType.LAZY)
     private List<Acciones> acciones;
 
-    @OneToMany(mappedBy="users",fetch = FetchType.LAZY)
-    private List<Comentarios> comentarios;
+//    @OneToMany(mappedBy="users",fetch = FetchType.LAZY)
+//    private List<Comentarios> comentarios;
     
     
 	@JsonIgnore

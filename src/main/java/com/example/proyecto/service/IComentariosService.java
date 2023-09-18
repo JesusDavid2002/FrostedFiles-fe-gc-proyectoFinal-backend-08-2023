@@ -3,6 +3,7 @@ package com.example.proyecto.service;
 import java.util.List;
 
 import com.example.proyecto.dto.Comentarios;
+import com.example.proyecto.dto.Users;
 
 public interface IComentariosService {
 
@@ -20,4 +21,5 @@ public interface IComentariosService {
 	
 	// Elimina el comentario
 	public void eliminarComentario(int codigo);
+
 }

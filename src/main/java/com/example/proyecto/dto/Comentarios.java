@@ -45,9 +45,9 @@ public class Comentarios {
     @JoinColumn(name="files_name", referencedColumnName="nombre")
     private Files files;
 
-    @ManyToOne
-    @JoinColumn(name="users_name", referencedColumnName="nombre")
-    private Users users;
+//    @ManyToOne
+//    @JoinColumn(name="users_name", referencedColumnName="nombre")
+//    private Users users;
    
 
 	/**

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.proyecto.auth.AuthService;
@@ -53,17 +54,11 @@ public class ComentarioController {
     @PostMapping("/add")
     @Transactional
     public ResponseEntity<Comentarios> guardarComentario(@RequestBody Comentarios comentario){
-    	
-    	if(comentario.getUsers().getUsername() != null) {
-    		String nombreUsuario = comentario.getUsers().getUsername();
-	    	Users users = iUsers.findByUsername(nombreUsuario);
 
 	    	String nombreArchivo = comentario.getFiles().getNombre();
 	        Files files = iFiles.findByNombre(nombreArchivo);
-	        System.out.println(nombreUsuario);
+	        
 	    	comentario.setFiles(files);
-	        comentario.setUsers(users);
-    	}
     	
     	return ResponseEntity.ok(comentariosServiceImpl.guardarComentario(comentario));
     }
