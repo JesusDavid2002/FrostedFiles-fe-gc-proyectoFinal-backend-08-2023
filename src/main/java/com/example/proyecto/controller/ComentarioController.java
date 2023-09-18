@@ -1,6 +1,7 @@
 package com.example.proyecto.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.proyecto.auth.AuthService;
 import com.example.proyecto.dao.IFilesDAO;
+import com.example.proyecto.dao.IUserDAO;
+import com.example.proyecto.dao.UserRepository;
 import com.example.proyecto.dto.Comentarios;
 import com.example.proyecto.dto.Files;
+import com.example.proyecto.dto.Users;
 import com.example.proyecto.service.ComentariosServiceImpl;
 
 import jakarta.transaction.Transactional;
@@ -32,6 +37,9 @@ public class ComentarioController {
 	@Autowired
 	private IFilesDAO iFiles;
 	
+	@Autowired
+	private IUserDAO iUsers;
+		
 	@GetMapping
     public List<Comentarios> listarCategories(){
         return comentariosServiceImpl.listarComentarios();
@@ -45,17 +53,18 @@ public class ComentarioController {
     @PostMapping("/add")
     @Transactional
     public ResponseEntity<Comentarios> guardarComentario(@RequestBody Comentarios comentario){
+    	
+    	if(comentario.getUsers().getUsername() != null) {
+    		String nombreUsuario = comentario.getUsers().getUsername();
+	    	Users users = iUsers.findByUsername(nombreUsuario);
 
-    	String nombreArchivo = comentario.getFiles().getNombre();
-        Files files = iFiles.findByNombre(nombreArchivo);
-
-        if (files == null) {
-            Files nuevoFiles = new Files();
-            nuevoFiles.setNombre(comentario.getFiles().getNombre());
-            iFiles.save(files);
-        }
-
-        comentario.setFiles(files);
+	    	String nombreArchivo = comentario.getFiles().getNombre();
+	        Files files = iFiles.findByNombre(nombreArchivo);
+	        System.out.println(nombreUsuario);
+	    	comentario.setFiles(files);
+	        comentario.setUsers(users);
+    	}
+    	
     	return ResponseEntity.ok(comentariosServiceImpl.guardarComentario(comentario));
     }
     

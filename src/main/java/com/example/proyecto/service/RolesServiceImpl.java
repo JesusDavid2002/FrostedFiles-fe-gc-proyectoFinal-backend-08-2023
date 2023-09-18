@@ -10,40 +10,32 @@ import com.example.proyecto.dto.Roles;
 
 @Service
 public class RolesServiceImpl implements IRolesService{
-
-	private final IRolesDAO iRolesDAO;
-
-    @Autowired
-    public RolesServiceImpl(IRolesDAO iRolesDAO) {
-        this.iRolesDAO = iRolesDAO;
-    }
+	
+	@Autowired
+	private IRolesDAO iRolesDAO; 
 	
 	@Override
 	public List<Roles> listarRoles() {
-		// TODO Auto-generated method stub
 		return iRolesDAO.findAll();
 	}
 
+	@Override
 	public Roles rolNombre(String nombre) {
-		// TODO Auto-generated method stub
 		return iRolesDAO.findByNombre(nombre);
 	}
 
 	@Override
 	public Roles guardarRol(Roles rol) {
-		// TODO Auto-generated method stub
 		return iRolesDAO.save(rol);
 	}
 
 	@Override
 	public Roles actualizarRol(Roles rol) {
-		// TODO Auto-generated method stub
 		return iRolesDAO.save(rol);
 	}
 
 	@Override
 	public void eliminarRolXNombre(String nombre) {
-		// TODO Auto-generated method stub
 		iRolesDAO.deleteByNombre(nombre);
 	}
 

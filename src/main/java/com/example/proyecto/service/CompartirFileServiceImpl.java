@@ -3,6 +3,7 @@ package com.example.proyecto.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.proyecto.dao.IFilesDAO;
@@ -38,7 +41,6 @@ public class CompartirFileServiceImpl {
 	private FilesServiceImpl filesServiceImpl; 
 
 	public void compartirArchivo(ModeloCompartir modelo) throws Exception {
-		
         try {
             MimeMessage mensajes = enviarEmail.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mensajes, true);
@@ -56,7 +58,7 @@ public class CompartirFileServiceImpl {
                     helper.setText(modelo.getMensaje());
                     
                     ByteArrayResource archivoBytes = new ByteArrayResource(contenidoFile.getContenido());
-                    helper.addAttachment(nombre + "." + extension, archivoBytes);
+                    helper.addAttachment(nombre + extension, archivoBytes);
                     
                     Files file = filesServiceImpl.fileNombre(nombre);
                     Acciones accion = new Acciones("compartir", LocalDateTime.now(), file);
@@ -77,21 +79,23 @@ public class CompartirFileServiceImpl {
 	}
 
 	private Files convertidorAFiles(MultipartFile file) throws IOException{
+		 if (file == null || file.isEmpty()) {
+	        throw new IllegalArgumentException("MultipartFile is null or empty");
+		}
+		 
 		Files files = new Files();
 		String nombre = file.getOriginalFilename();
-		int separacion = nombre.lastIndexOf('.');
-		files.setNombre(file.getOriginalFilename());
-
-		String[] partes = nombre.split("\\.");
-
-		if (separacion >= 3) {
-		    String extension = partes[2];
-		    files.setExtension(extension);
-		} 
+		files.setNombre(nombre);
 		
-		files.setTamano(file.getSize());
-		//files.setFechaSubida(new LocalDateTime("2023-09-06","14:30:00"));
-		files.setContenido(file.getBytes());
+        String extension = file.getContentType();
+        files.setExtension(extension);
+        
+        long tamano = file.getSize();
+		files.setTamano(tamano);
+		
+		byte[] contenido = file.getBytes();
+		files.setContenido(contenido);
+	    
 		return files;
 	}
 

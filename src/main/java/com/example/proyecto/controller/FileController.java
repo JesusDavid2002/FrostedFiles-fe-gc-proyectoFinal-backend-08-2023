@@ -2,7 +2,9 @@ package com.example.proyecto.controller;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -186,7 +188,7 @@ public class FileController {
     }
     
 	@PostMapping(value="/compartir", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> compartirArchivo(@RequestParam("archivo") MultipartFile file,
+    public ResponseEntity<Map<String, String>> compartirArchivo(@RequestParam("archivo") MultipartFile file,
             @RequestParam("destinatario") String destinatario,
             @RequestParam("asunto") String asunto,
             @RequestParam("mensaje") String mensaje,
@@ -195,8 +197,10 @@ public class FileController {
     		ModeloCompartir request = new ModeloCompartir(destinatario,asunto,mensaje,file);
     		
     		compartirServiceImpl.compartirArchivo(request);
-        	
-        return ResponseEntity.ok("Archivo compartido");
+    		Map<String, String> response = new HashMap<>();
+            response.put("message", "Archivo compartido exitosamente");
+            
+            return ResponseEntity.ok(response);
 				
     	} catch (IOException e) {
 			e.printStackTrace();

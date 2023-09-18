@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.proyecto.dto.Roles;
 
-@Repository
 public interface IRolesDAO extends JpaRepository<Roles, String>{
 	Roles findByNombre(String nombre);
 	

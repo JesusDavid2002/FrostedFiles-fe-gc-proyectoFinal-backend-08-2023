@@ -29,7 +29,6 @@ public class UserController {
 	
 	@Autowired
 	private UserServiceImpl userServiceImpl;
-    private final RolesServiceImpl rolesService;
 	
 	@GetMapping("/admin/users")
     public List<Users> getAllUsers(){
@@ -45,10 +44,8 @@ public class UserController {
 	public ResponseEntity<Users> updateAdmin(@PathVariable(name = "email") String email, @RequestBody Users user) {
 	    
 	    Users user_seleccionado = userServiceImpl.usuarioEmail(email);
-	    
-	    Roles existingRole = rolesService.rolNombre(user.getRoles().getNombre());
-	    
-	    user_seleccionado.setRoles(existingRole);
+	    	    
+	    user_seleccionado.setRoles(user.getRoles());
 	    
 	    Users user_actualizado = userServiceImpl.actualizarUsuario(user_seleccionado);
 	    return ResponseEntity.ok(user_actualizado);

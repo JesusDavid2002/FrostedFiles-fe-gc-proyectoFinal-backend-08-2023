@@ -42,7 +42,6 @@ public class Roles {
     public Roles(String rol) {
     	this.nombre = rol;
     }
-
     
     @JsonIgnore
 	public List<Users> getUsers() {

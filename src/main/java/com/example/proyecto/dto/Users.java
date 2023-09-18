@@ -72,12 +72,15 @@ public class Users implements UserDetails{
     @Column(name="foto_portada", columnDefinition="BLOB")
     private byte[] fotoPortada;
         
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "role")
     private Roles roles;
 
     @OneToMany(mappedBy="users",fetch = FetchType.LAZY)
     private List<Acciones> acciones;
+
+    @OneToMany(mappedBy="users",fetch = FetchType.LAZY)
+    private List<Comentarios> comentarios;
     
     
 	@JsonIgnore
